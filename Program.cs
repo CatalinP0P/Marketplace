@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Marketplace.Data;
+using Marketplace.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient<IRoLocationService, RoLocationService>(c =>
+{
+    c.BaseAddress = new Uri("https://roloca.coldfuse.io/");
+}
+);
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
