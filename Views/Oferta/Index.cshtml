@@ -1,0 +1,51 @@
+@model Anunt;
+
+<div class="container g-3 pt-3">
+    <div class="col-12 col-md-8 mx-auto">
+        <div class="card bg-white mt-2 border-0 border-round">
+            <img src="@Model.ImageURL">
+        </div>
+
+        <div class="card bg-white mt-2 border-0 border-round">
+            <div class="mx-4 my-4">
+                <p class="text-muted" > @Model.Date </p>
+                <h1> @Model.Title </h1> 
+                <h3 style="font-weight: bold" class="mb-1" > @Model.Price Lei </h3>
+                <hr>
+                <label style="font-size: 24px" class="mb-1"> Descriere </label>
+                <p> @Model.Description </p>
+            </div>
+        </div>
+
+        <div class="card bg-white mt-2 border-0 border-round"> 
+            <div class="mx-4 my-4">
+                <h4> Localizare </h4>
+                <p><b>@Model.City,</b> @Model.County </p>
+            </div>
+        </div>
+
+        <div class="card bg-white mt-2 border-0 border-round" >
+            <div class="mx-4 my-4">
+                <h4> Contacteaza Vanzatorul </h4>
+                <p> Tel : @Model.NumarTelefon </p>
+                <p> Id : @Model.AccountId </p>
+            </div>
+        </div>
+    </div>
+    
+
+    
+</div>
+
+<style>
+    .background
+    {
+        background-color: #f2f4f5;
+        border-width: 0px;
+    }
+
+    .description
+    {
+        height: 200px;
+    }
+</style>

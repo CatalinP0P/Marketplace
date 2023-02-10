@@ -1,8 +1,79 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model Marketplace.ViewModels.HomeIndexViewModel;
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid" style="background-color: #f2f4f5;">
+    <div class="col-11 col-sm-10 mx-auto">
+        <div class="input-group pt-5 pb-5">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                aria-describedby="search-addon" />
+            <button type="button" class="btn btn-outline-secondary btn-lg">Cauta acum</button>
+        </div>
+    </div>
 </div>
+
+<div class="container-fluid" style="background-color: white;">
+    <div class="container">
+        <div class="row px-3 py-3">
+            @foreach (var cat in @Model.Categories)
+            {
+                @Html.Partial("CategorieCardPartial", cat);
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-5" style="background-color: #f2f4f5;">
+    <div class="container g-1" style="background-color: #f2f4f5;">
+        <div class="row" style="background-color: #f2f4f5;">
+            @if (@Model.Anunturi != null && @Model.Anunturi.Count > 0 )
+            {
+                <h1 class="ms-1"> Anunturi Promovate </h1>
+                @foreach (var anunt in @Model.Anunturi)
+                {
+                    <div class="col-12 col-md-6 col-lg-3 py-2" style="background-color: #f2f4f5;">
+                        <div class="card border-0">
+                            
+                            <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
+                                <div class="ratio ratio-4x3">
+                                    <img class="card-img-top px-3 pt-3" src="@anunt.ImageURL">
+                                </div>
+                            </a>
+                            
+                            <div class="card-body">
+                                <p class="text-dark px-1">@anunt.Title</p>
+                                <p class="text-muted px-1 pt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
+                                <p class="px-1 pt-2" style="font-weight: bold"> @anunt.Price Lei </p>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h1 style="text-dark"> Nu exista anunturi disponibile </h1>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .image
+    {
+        position: absolute,
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        width: 100%,
+        padding-top: 100%;
+    }
+    .btn-custom 
+    {
+        background-color: #002f34;
+        border-color: #002f34;
+        color: #fff;
+    }
+
+</style>

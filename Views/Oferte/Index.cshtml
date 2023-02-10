@@ -1,0 +1,38 @@
+@model OferteViewModel;
+
+<div class="container-fluid mt-5" style="background-color: #f2f4f5;">
+    <div class="container g-1" style="background-color: #f2f4f5;">
+        <div class="row" style="background-color: #f2f4f5;">
+            @if (@Model.Anunturi != null && @Model.Anunturi.Count > 0)
+            {
+                <h1 class="ms-1"> Anunturi Promovate </h1>
+                @foreach (var anunt in @Model.Anunturi)
+                {
+                    <div class="col-12 col-md-6 col-lg-3 py-2" style="background-color: #f2f4f5;">
+                        <div class="card border-0">
+                            
+                            <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
+                                <div class="ratio ratio-4x3">
+                                    <img class="card-img-top px-3 pt-3" src="@anunt.ImageURL">
+                                </div>
+                            </a>
+                            
+                            <div class="card-body">
+                                <p class="text-dark px-1">@anunt.Title</p>
+                                <p class="text-muted px-1 pt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
+                                <p class="px-1 pt-2" style="font-weight: bold"> @anunt.Price Lei </p>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h1 style="text-dark"> Nu exista anunturi disponibile </h1>
+            }
+
+        </div>
+    </div>
+
+</div>
