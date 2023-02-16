@@ -20,3 +20,54 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.btn-custom 
+    {
+        background-color: #002f34;
+        border-color: #002f34;
+        color: #fff;
+    }
+
+.background
+    {
+        background-color: #f2f4f5;
+        border-width: 0px;
+    }
+
+    .dropdown-custom
+    {
+        position: relative;
+    }    
+    
+    .dropdown-custom-button
+    {
+        cursor: pointer;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 60px;
+        padding-right: 70px;
+        border: 1px solid rgba(0, 0, 0, .01);
+        background-color: yellowgreen;
+        color: white;
+    }
+    
+    .dropdown-custom-menu
+    {
+      z-index: 9;
+      position: absolute;
+      left: 0;
+      top: calc(100% + .5rem);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      background-color: white;
+      border-radius: 10px;
+      padding: 10px;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(-25%);
+    }
+    
+    .dropdown-custom.active > .btn + .dropdown-custom-menu{
+      opacity: 1;
+      transform: translateY(0);
+    }
+  

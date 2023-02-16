@@ -1,11 +1,73 @@
 @model OferteViewModel;
 
-<div class="container-fluid mt-5" style="background-color: #f2f4f5;">
+<div class="container-fluid" style="background-color: #f2f4f5;">
+    <div class="col-11 col-sm-10 mx-auto">
+        
+        <div class="input-group pt-5 pb-5">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                aria-describedby="search-addon" id="searchBox"/>
+            
+            <div class="dropdown-custom" data-dropdown>
+                <button class="btn btn-outline-secondary btn-lg" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
+                
+                <div class="dropdown-custom-menu" style="width: 200px">
+                    <div >
+                        @Html.DropDownList("Toata Romania", new SelectList(new List<string>()), "Toata Romania", new { @class="form-control", @id="countyDropDown", @onchange = "changeCounty()"})
+                        @Html.DropDownList("Localitate", new SelectList(new List<string>()), "Toate Localitatile", new {@class="form-control my-2", @id="cityDropDown", @onchange = "changeCity()"})
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
+        </div>
+    
+    </div>
+</div>
+
+<div class="container">
+        <div class="row g-2 mx-1">
+            <div class="col-6 col-md-3">
+                <label class="ms-1" >Categorie</label>
+                @Html.DropDownList("Orice Categorie", new SelectList( @Model.Categories ), "Orice Categorie", new { @class = "form-control", @id = "categoryTextBox" } )    
+            </div>
+
+            <div class="col-6 col-md-3">
+                <label class="ms-1" >Pret</label>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control " placeholder="De la" id="minPriceTextBox">
+                    </div>
+                    
+                    <div class="col" style="margin-left: -20px">
+                        <input class="form-control " placeholder="Pana la" id="maxPriceTextBox" >  
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 cold-md-2">
+                <button class="btn btn-custom mt-4" id="filterButton" > Filtreaza </button>
+            </div>
+        </div>
+        <hr>
+</div>
+
+<div class="container-fluid mt-2" style="background-color: #f2f4f5;">
     <div class="container g-1" style="background-color: #f2f4f5;">
         <div class="row" style="background-color: #f2f4f5;">
             @if (@Model.Anunturi != null && @Model.Anunturi.Count > 0)
             {
-                <h1 class="ms-1"> Anunturi Promovate </h1>
+                @if ( @Model.Anunturi.Count == 1 )
+                {
+                    <h3 class="mt-3"> Am gasit un rezultat pentru tine </h3>
+                }
+                else if ( @Model.Anunturi.Count < 1000 )
+                {
+                    <h3 class="mx-1"> Am gasit @Model.Anunturi.Count de rezultate pentru tine </h3>
+                }
+                else
+                {
+                    <h3 class="mx-1"> Am gasit peste 1000 de rezultate pentru tine </h3>
+                }
                 @foreach (var anunt in @Model.Anunturi)
                 {
                     <div class="col-12 col-md-6 col-lg-3 py-2" style="background-color: #f2f4f5;">
@@ -29,10 +91,183 @@
             }
             else
             {
-                <h1 style="text-dark"> Nu exista anunturi disponibile </h1>
+                <h4 style="mx-1 text-dark"> Nu exista anunturi disponibile </h4>
             }
 
         </div>
     </div>
 
 </div>
+
+<style>
+
+.searchbar
+{
+    display: flex;
+}
+
+.textbox
+{
+    width: 500px;
+    height: 50px;
+    font-size: 25px;
+    padding-left: 10px;
+    z-index: 5;
+    border: 1px solid black;
+}
+</style>
+
+
+
+@section Scripts
+{
+    <script>
+        var model = @Html.Raw(Json.Serialize(Model));
+
+        document.addEventListener("click", e => 
+        { 
+            const isDropDownButton = e.target.matches("[data-dropdown-button]")
+            if ( !isDropDownButton && e.target.closest("[data-dropdown]") != null ) return;
+
+            let currentDropDown;
+            if ( isDropDownButton )
+            {
+            currentDropDown = e.target.closest("[data-dropdown]");
+            currentDropDown.classList.toggle("active");
+            }
+
+            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
+            {
+                if ( dropdown == currentDropDown ) return;
+                dropdown.classList.remove("active")
+            })
+        })
+
+        var dropDownButton = $("#countyDropdownButton")
+        var countyDropdown = $("#countyDropDown")
+        var cityDropDown = $("#cityDropDown");
+
+        function changeCounty()
+        {
+            dropDownButton.text(countyDropdown.val())
+        }
+
+        function changeCity()
+        {
+            dropDownButton.text(dropDownButton.text()+ ", " + cityDropDown.val())
+            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
+            {
+                dropdown.classList.remove("active")
+            })
+        }
+        
+
+        $(document).ready(function()
+        {
+        
+            var url = "http://localhost:5064/api/location/counties";
+            $.get(url, function(data)
+            {
+                $.each(data, function(index)
+                {
+                    countyDropdown.append("<option>"+ data[index] +"</option>");
+                })
+            })
+
+            var searchButton = $("#searchButton");
+            var searchBox = $("#searchBox");
+            var filterButton = $("#filterButton");
+
+            <!-- Filters -->
+            var q = @Html.Raw(Json.Serialize(Model.Filters.q))
+            var city = @Html.Raw(Json.Serialize(Model.Filters.City))
+            var county = @Html.Raw(Json.Serialize(Model.Filters.County))
+            var minPrice = @Html.Raw(Json.Serialize(Model.Filters.minPrice))
+            var maxPrice = @Html.Raw(Json.Serialize(Model.Filters.maxPrice))
+            var category = @Html.Raw(Json.Serialize(Model.Filters.Category))
+            
+            searchBox.val(q);
+            if ( minPrice != 0 )
+                $("#minPriceTextBox").val(minPrice);
+            if ( maxPrice != 1000000000 )
+                $("#maxPriceTextBox").val(maxPrice);
+            if ( category != "" )
+                $("#categoryTextBox").val(category);
+            if ( county != "" )
+                dropDownButton.val(county);
+
+            filterButton.on("click", function()
+            {
+                var category =  $("#categoryTextBox").val();
+                var minPrice = $("#minPriceTextBox").val();
+                var maxPrice = $("#maxPriceTextBox").val();
+                
+                var url = "/Oferte/index";
+
+                if ( category != "" )
+                {
+                    url = url + "?categorie=" + category;
+                }
+                else
+                {
+                    url += "?categorie= ";
+                }
+                if ( searchBox.val() != "" && searchBox.val() != null )
+                {
+                    url = url + "&q=" + searchBox.val();
+                }
+                if ( minPrice != "" )
+                {
+                    url =  url + "&minPrice=" + minPrice;
+                }
+                if ( maxPrice != "" )
+                {
+                    url = url + "&maxPrice=" + maxPrice;
+                }
+                if ( countyDropdown.val() != "Toata Romania" && countyDropdown.val() != "" )
+                {
+                    url += "&county=" + countyDropdown.val();
+                }
+
+                location.href = url;
+            });     
+
+            countyDropdown.on("change", function()
+            {
+                cityDropDown.empty();
+                cityDropDown.append("<option>"+ "Toate Localitatile" +"</option>");
+                var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropdown.val();                
+                $.get(url1, function(data)
+                {
+                    var auto = String(data);
+                    var url = "http://localhost:5064/api/location/cities/" + auto;
+                    $.get(url, function(data)
+                    {
+                        $.each(data, function(index)
+                        {
+                            cityDropDown.append("<option>" + data[index] + "</option>")
+                        })
+                    }) 
+                });
+            })
+
+            searchButton.on("click", function()
+            {
+                if ( searchBox.val() != "" || countyDropdown.val() != "Toata Romania" )
+                {
+                    var url = "/Oferte/Index?q=" + searchBox.val();
+                    if ( countyDropdown.val() != "Toata Romania" && countyDropdown.val() != "" )
+                    {
+                        url += "&county=" + countyDropdown.val();
+                    }
+                    if ( cityDropDown.val() != "Toate Localitatile" )
+                    {
+                        url += "&city=" + cityDropDown.val();
+                    }
+                    location.href = url;
+                }
+            });
+        });
+
+    </script>
+}

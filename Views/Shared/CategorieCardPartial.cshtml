@@ -2,7 +2,7 @@
 
 <div class="col-3 col-sm-2 col-lg-1">
     <div class="card bg-white border-0">
-        <a asp-action="Index" asp-controller="Home" asp-route-category="@Model.Name" >
+        <a asp-action="Index" asp-controller="Oferte" asp-route-categorie="@Model.Name" >
             <div class="div" style="border-radius: 100%; background-color : #ffcf32;">
                 <img class="card-img-top rounded" src="@Model.Image" >
             </div>
@@ -11,7 +11,7 @@
         
         <div class="card-body">
             <div class="text-center">
-                <label> @Model.Name </label>
+                <label class="mx-auto"> @Model.Name </label>
             </div>
         </div>
     </div>

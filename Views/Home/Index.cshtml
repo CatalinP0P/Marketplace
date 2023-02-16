@@ -4,15 +4,31 @@
     <div class="col-11 col-sm-10 mx-auto">
         <div class="input-group pt-5 pb-5">
             <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                aria-describedby="search-addon" />
-            <button type="button" class="btn btn-outline-secondary btn-lg">Cauta acum</button>
+                aria-describedby="search-addon" id="searchBox"/>
+            
+            <div class="dropdown-custom" data-dropdown>
+                <button class="btn btn-outline-secondary btn-lg" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
+                
+                <div class="dropdown-custom-menu" style="width: 200px">
+                    <div >
+                        @Html.DropDownList("Toata Romania", new SelectList(new List<string>()), "Toata Romania", new { @class="form-control", @id="countyDropDown", @onchange = "changeCounty()"})
+                        @Html.DropDownList("Localitate", new SelectList(new List<string>()), "Toate Localitatile", new {@class="form-control my-2", @id="cityDropDown", @onchange = "changeCity()"})
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
         </div>
+
+        
     </div>
 </div>
 
 <div class="container-fluid" style="background-color: white;">
-    <div class="container">
-        <div class="row px-3 py-3">
+    <div class="container pt-2">
+        <h1 class="text-center mb-2"> Categorii Principale </h1>
+        
+        <div class="row px-3 my-5">
             @foreach (var cat in @Model.Categories)
             {
                 @Html.Partial("CategorieCardPartial", cat);
@@ -26,7 +42,7 @@
         <div class="row" style="background-color: #f2f4f5;">
             @if (@Model.Anunturi != null && @Model.Anunturi.Count > 0 )
             {
-                <h1 class="ms-1"> Anunturi Promovate </h1>
+                <h1 class="text-center my-2"> Anunturi Promovate </h1>
                 @foreach (var anunt in @Model.Anunturi)
                 {
                     <div class="col-12 col-md-6 col-lg-3 py-2" style="background-color: #f2f4f5;">
@@ -77,3 +93,100 @@
     }
 
 </style>
+
+@section Scripts
+{
+    
+    <script>
+        document.addEventListener("click", e => 
+        { 
+            const isDropDownButton = e.target.matches("[data-dropdown-button]")
+            if ( !isDropDownButton && e.target.closest("[data-dropdown]") != null ) return;
+
+            let currentDropDown;
+            if ( isDropDownButton )
+            {
+            currentDropDown = e.target.closest("[data-dropdown]");
+            currentDropDown.classList.toggle("active");
+            }
+
+            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
+            {
+                if ( dropdown == currentDropDown ) return;
+                dropdown.classList.remove("active")
+            })
+        })
+        var dropDownButton = $("#countyDropdownButton")
+        var countyDropdown = $("#countyDropDown")
+        var countyDropDown = $("#countyDropDown");
+        var cityDropDown = $("#cityDropDown");
+
+        function changeCounty()
+        {
+            dropDownButton.text(countyDropdown.val())
+        }
+
+        function changeCity()
+        {
+            dropDownButton.text(dropDownButton.text()+ ", " + cityDropDown.val())
+            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
+            {
+                dropdown.classList.remove("active")
+            })
+        }
+        
+
+        $(document).ready(function()
+        {
+            var searchButton = $("#searchButton");
+            var searchBox = $("#searchBox");
+            
+            var url = "http://localhost:5064/api/location/counties";
+            $.get(url, function(data)
+            {
+                $.each(data, function(index)
+                {
+                    countyDropDown.append("<option>"+ data[index] +"</option>");
+                })
+            })
+
+            countyDropDown.on("change", function()
+            {
+                cityDropDown.empty();
+                cityDropDown.append("<option>"+ "Toate Localitatile" +"</option>");
+                var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropDown.val();                
+                $.get(url1, function(data)
+                {
+                    var auto = String(data);
+                    var url = "http://localhost:5064/api/location/cities/" + auto;
+                    $.get(url, function(data)
+                    {
+                        $.each(data, function(index)
+                        {
+                            cityDropDown.append("<option>" + data[index] + "</option>")
+                        })
+                    }) 
+                });
+            })
+
+            <!-- Searching -->
+            searchButton.on("click", function()
+            {
+                if ( searchBox.val() != "" || countyDropDown.val() != "Toata Romania" )
+                {
+                    var url = "Oferte/Index?q=" + searchBox.val();
+                    if ( countyDropDown.val() != "Toata Romania" && countyDropDown.val() != "" )
+                    {
+                        url += "&county=" + countyDropDown.val();
+                    }
+                    if ( cityDropDown.val() != "Toate Localitatile" )
+                    {
+                        url += "&city=" + cityDropDown.val();
+                    }
+                    location.href = url;
+                }
+            });
+        });
+
+    </script>
+}

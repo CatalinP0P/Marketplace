@@ -14,47 +14,40 @@ namespace Marketplace.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string categorie = "", string q = "")
+        public IActionResult Index(string categorie = "", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
         {
             var viewModel = new OferteViewModel();
+            viewModel.Anunturi = new List<Anunt>();
+            viewModel.Categories = new List<string>();
 
-            if (categorie == "" && q == "")
+            foreach ( var anunt in _context.Anunturi.ToList() )
             {
-                viewModel.Anunturi = _context.Anunturi.ToList();
-            }
-            else if ( categorie != "" && q!= "" )
-            {
-                viewModel.Anunturi = new List<Anunt>();
-
-                foreach( var anunt in _context.Anunturi )
+                if (
+                anunt.Category.Contains(categorie) &&
+                anunt.County.Contains(county) &&
+                anunt.Title.Contains(q) &&
+                anunt.City.Contains(city) &&
+                anunt.Price >= minPrice && anunt.Price <= maxPrice )
                 {
-                    if ( anunt.Category == categorie ) 
-                        if ( anunt.Title.ToLower().Contains(q.ToLower()) )
-                            viewModel.Anunturi.Add(anunt);
-                } 
+                    viewModel.Anunturi.Add(anunt);
+                }
             }
-            else if ( categorie != "" )
-            {
-                viewModel.Anunturi = new List<Anunt>();
 
-                foreach( var anunt in _context.Anunturi )
-                {
-                    if ( anunt.Category == categorie ) 
-                    {
-                        viewModel.Anunturi.Add(anunt);
-                    }
-                } 
-            }
-            else if ( q != "" )
+            foreach ( var categ in _context.Categories )
             {
-                viewModel.Anunturi = new List<Anunt>();
-
-                foreach( var anunt in _context.Anunturi )
-                {
-                    if ( anunt.Title.ToLower().Contains(q.ToLower()) )
-                        viewModel.Anunturi.Add(anunt);
-                } 
+                viewModel.Categories.Add(categ.Name);
             }
+
+            viewModel.Filters = new FilterModel()
+            {
+                Category = categorie,
+                County = county,
+                City = city,
+                q = q,
+                minPrice = minPrice,
+                maxPrice = maxPrice,
+            };
+            
 
             return View("Index", viewModel);
 
