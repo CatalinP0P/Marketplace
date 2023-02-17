@@ -5,7 +5,7 @@
 <div class="container g-3 pt-3">
     <div class="col-12 col-md-8 mx-auto">
         <div class="card bg-white mt-2 border-0 border-round">
-            <img src="@Model.ImageURL">
+            <img src="" data-id="@Model.Id">
         </div>
 
         <div class="card bg-white mt-2 border-0 border-round">
@@ -50,6 +50,16 @@
       </div>
 
 </div>
+
+<script>
+    var id = @Html.Raw(Json.Serialize(@Model.Id))
+    var image = @Html.Raw(Json.Serialize(@Model.Image))
+
+    var parameter = '[data-id="' + id + '"]'
+    var img = document.querySelector(parameter)
+    img.src = "data:image/png;base64," + image
+
+</script>
 
 <style>
     .btn:hover
@@ -131,6 +141,9 @@
 </style>
 
 <script>
+
+    
+
     let popup = document.getElementById("popup");
     let overlay = document.getElementById("overlay")
     

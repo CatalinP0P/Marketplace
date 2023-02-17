@@ -12,9 +12,8 @@ namespace Marketplace.Models
 
         [Required]
         public string? Title { get; set; }
-
-        [Required]
-        public string? ImageURL { get; set; }
+        
+        public byte[] Image { get; set; }
 
         [Required]
         public string? Description { get; set; }

@@ -2,13 +2,40 @@
     ViewData["Title"] = "Privacy Policy";
 }
 
+<div class="col">
+    
+    <input type="file" id="photoinput"> 
+    <label for="photoinput" class="inputbtn"> Choose Photo </label>
+    <button class="btn btn-custom"> Load Image </button>
+    <img id="image-show" src="" alt="not found">   
+</div>
+
 
 <style>
+    .image-show
+    {
+        width: 500px;
+        height: 500px;
+    }
 
+    input
+    {
+        display: none;
+    }
+    .inputbtn
+    {
+        font-size: 22px;
+        padding: 25px;
+        background-color: #002f34;
+        color: white;
+        border-radius: 25px;
+        border: 1px solid black;
+    }
+
+    .inputbtn:hover
+    {
+        color: rgb(208, 208, 208)
+    }
 
 
 </style>
-
-<script>
-
-</script>

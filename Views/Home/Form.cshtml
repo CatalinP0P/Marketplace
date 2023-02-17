@@ -1,7 +1,7 @@
 @model Marketplace.ViewModels.FormViewModel;
 
 <div class="container g-3">
-    @using (@Html.BeginForm("Save", "Home"))
+    @using (@Html.BeginForm("Save", "Home", FormMethod.Post, new { @enctype="multipart/form-data"}))
     {
         <h2 class="ms-2 mt-3"> Publica un anunt </h2>
         <div class="card bg-white mt-2 border-0 border-round">
@@ -9,34 +9,30 @@
                 <label> Titlu </label>
                 
                 <div class="col-12 col-md-6">
-                    @Html.TextBoxFor(m=>m.Anunt.Title, new { @placeholder = "ex: Vand Golf 6", @class = "form-control background" })
-                    @Html.ValidationMessageFor(m=>m.Anunt.Title)
+                    <input class="form-control background" type="text" name="title" id="titleInput">  
                 </div>
                 
                 <label class="mt-2"> Categorie </label>
                 <div class="col-12 col-md-4">
-                    @Html.DropDownListFor(m=>m.Anunt.Category, new SelectList(new List<string>()), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
-                    @Html.ValidationMessageFor(m=>m.Anunt.Category)
+                    @Html.DropDownList("category", new SelectList(new List<string>()), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
                 </div>
-                
-                
             </div>
-
         </div>
 
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-3 my-3">
                 <label> Imagine </label>
-                @Html.TextBoxFor( m=>m.Anunt.ImageURL, "Adauga Imagine", new { @class = "form-control background", @placeholder = "URL-ul de la imagine" })
-                @Html.ValidationMessageFor( m=>m.Anunt.ImageURL )
+                <input type="file" name="file" id="imageInput" onchange="photoChanged()">
+                <img class="imagePreview" style="width: 300px; height: 300px" src="" id="imagePreview" >   
+                <!-- To do... -->
+            
             </div>
         </div>
 
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-3 my-3">
                 <label> Descriere </label>
-                @Html.TextAreaFor( m=>m.Anunt.Description, new { @class = "form-control background description", @placeholder = "Incearca sa scrii ceea ce ai vrea tu sa aflii daca te-ai uita la acest anunt" }  )
-                @Html.ValidationMessageFor(m=>m.Anunt.Description)
+                @Html.TextArea("description", new { @class = "form-control background description", @placeholder = "Incearca sa scrii ceea ce ai vrea tu sa aflii daca te-ai uita la acest anunt", @name="description" }  )
             </div>
         </div>
         
@@ -45,12 +41,9 @@
                 <label> Pret </label>
                 <div class="row">
                     <div class="col-6">
-                        @Html.TextBoxFor( m=>m.Anunt.Price, new { @class = "form-control background"  })        
-                        @Html.ValidationMessageFor( m=>m.Anunt.Price )
+                        <input type="text" name="price" class="form-control background">    
                     </div>
                 </div>
-                
-                
             </div>
         </div>
         
@@ -60,12 +53,10 @@
                 <div class="row">
                     <label> Locatie </label>
                     <div class="col-12 col-md-6 mb-2">
-                        @Html.DropDownListFor(m=>m.Anunt.County, new SelectList(@Model.Counties.ToList()), "Alege Judetul", new { @class="form-control background", @Id="countyDropDown" })
-                        @Html.ValidationMessageFor(m=>m.Anunt.County)
+                        @Html.DropDownList("county", new SelectList(@Model.Counties.ToList()), "Alege Judetul", new { @class="form-control background", @Id="countyDropDown", @name="county" })
                     </div>
                     <div class="col-12 col-md-6">
-                        @Html.DropDownListFor(m=>m.Anunt.City, new SelectList(@Model.Counties.ToList()), "Alege Oras/Localitate", new { @class = "form-control disabled background", @Id = "cityDropDown" })
-                        @Html.ValidationMessageFor(m=>m.Anunt.City)
+                        @Html.DropDownList("city", new SelectList(@Model.Counties.ToList()), "Alege Oras/Localitate", new { @class = "form-control disabled background", @Id = "cityDropDown", @name="city" })
                     </div>
                 </div>
                 
@@ -77,65 +68,44 @@
                 <label> Date personale </label>
                 <div class="row">
                     <div class="col-12 col-md-6 mb-2">
-                        @Html.TextBoxFor(m=>m.Anunt.Mail, new { @class = "form-control background", @placeholder = "Mail" })
-                        @Html.ValidationMessageFor(m=>m.Anunt.Mail)
+                        <input type="mail" name="mail" class="form-control background" placeholder="Mail" >  
                     </div>
                 
                     <div class="col-12 col-md-6">
-                        @Html.TextBoxFor(m=>m.Anunt.NumarTelefon, new { @class = "form-control background", @placeholder = "Numar de Telefon" })
-                        @Html.ValidationMessageFor(m=>m.Anunt.NumarTelefon)
+                        <input type="tel" name="phone" class="form-control background" placeholder="07...." >
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="card bg-white my-2 border-0 border-round">
-            <div class="mx-3 my-3">
-                <button type="submit" class="btn btn-custom text-white"> Publica un anunt </button>
-            </div>
-        </div>
-
-        @Html.HiddenFor(m=>m.Anunt.Id);
-        @Html.HiddenFor(m=>m.Anunt.AccountId);
-
-        @Html.AntiForgeryToken();
         
+        <div class="card bg-white my-2 border-0 border-round">
+                 <div class="mx-3 my-3">
+                    <button id="formButton" class="btn btn-custom text-white formButton" onclick="submitForms()"> Publica un anunt </button>
+                </div>
+        </div>
+    
+        @Html.AntiForgeryToken();
     }
 </div>
 
-<style>
-    .background
-    {
-        background-color: #f2f4f5;
-        border-width: 0px;
-    }
-
-    .btn-custom
-    {
-        background-color:#002f34;
-        float: right;
-    }
-
-    .description
-    {
-        height: 200px;
-    }
-
-    .field-validation-error
-    {
-        color: red;        
-    }
-
-    .input-validation-error
-    {
-        color : red;
-    }
-
-</style>
 
 @section Scripts
 {
     <script>
+
+        function photoChanged()
+        {
+            var input = document.getElementById("imageInput");
+            var imagePreview = document.getElementById("imagePreview");
+            
+            const [file] = input.files
+            
+            if ( file )
+            {
+                imagePreview.src = URL.createObjectURL(file)
+            }
+        }
+
         $(document).ready( function()
         {
             var countyDropDown = $("#countyDropDown");

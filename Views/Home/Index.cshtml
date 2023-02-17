@@ -4,7 +4,7 @@
     <div class="col-11 col-sm-10 mx-auto">
         <div class="input-group pt-5 pb-5">
             <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                aria-describedby="search-addon" id="searchBox"/>
+                aria-describedby="search-addon" onkeydown="key_up()" id="searchBox"/>
             
             <div class="dropdown-custom" data-dropdown>
                 <button class="btn btn-outline-secondary btn-lg" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
@@ -12,12 +12,12 @@
                 <div class="dropdown-custom-menu" style="width: 200px">
                     <div >
                         @Html.DropDownList("Toata Romania", new SelectList(new List<string>()), "Toata Romania", new { @class="form-control", @id="countyDropDown", @onchange = "changeCounty()"})
-                        @Html.DropDownList("Localitate", new SelectList(new List<string>()), "Toate Localitatile", new {@class="form-control my-2", @id="cityDropDown", @onchange = "changeCity()"})
+                        @Html.DropDownList("Localitate", new SelectList(new List<string>()), "Toate Localitatile", new {@class="form-control mt-2", @id="cityDropDown", @onchange = "changeCity()"})
                     </div>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
+            <button type="submit" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
         </div>
 
         
@@ -50,7 +50,8 @@
                             
                             <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
                                 <div class="ratio ratio-4x3">
-                                    <img class="card-img-top px-3 pt-3" src="@anunt.ImageURL">
+                                    <img class="card-img-top px-3 pt-3" src="data:image/png;base64, @anunt.Image" data-id="@anunt.Id">
+                                    <!-- To do... -->
                                 </div>
                             </a>
                             
@@ -96,10 +97,23 @@
 
 @section Scripts
 {
-    
     <script>
+        
+        @foreach (var anunt in Model.Anunturi)
+        {
+            <text>
+                var id = @Html.Raw(Json.Serialize(@anunt.Id))
+                var image = @Html.Raw(Json.Serialize(@anunt.Image))
+
+                var parameter = '[data-id="' + id + '"]'
+                var img = document.querySelector(parameter)
+                img.src = "data:image/png;base64," + image
+
+            </text>
+        }
         document.addEventListener("click", e => 
-        { 
+        {
+
             const isDropDownButton = e.target.matches("[data-dropdown-button]")
             if ( !isDropDownButton && e.target.closest("[data-dropdown]") != null ) return;
 

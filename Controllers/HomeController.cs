@@ -81,47 +81,43 @@ public class HomeController : Controller
 
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(Anunt anunt)
+    public async Task<IActionResult> Save(string title, string description, string category, string price, string phone, string mail, string county, string city, IFormFile file)
     {
-        if (!ModelState.IsValid)
+        var userId = "notfound";
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+        if (claims != null)
         {
-            FormViewModel viewModel = new FormViewModel()
-            {
-                Anunt = anunt,
-                Categories = _context.Categories.ToList(),
-                Counties = new List<string>(),
-            };
-
-            viewModel.Categories = _context.Categories.ToList();
-            List<County> Counties = await _locationService.GetCounties();
-            foreach (var county in Counties)
-            {
-                if (county.Nume != null)
-                    viewModel.Counties.Add(county.Nume);
-            }
-
-            return View("Form", viewModel);
+            userId = claims.Value;
         }
 
-        if (anunt.Id == 0)
+        byte[] imageBytes;
+        using ( var ms = new MemoryStream() )
         {
-            anunt.Date = DateTime.Now;
-            _context.Anunturi.Add(anunt);
-            _context.SaveChanges();
-        }
-        else
-        {
-            var anuntInDB = _context.Anunturi.SingleOrDefault(m => m.Id == anunt.Id);
-            if (anuntInDB == null)
-            {
-                return RedirectToAction("Error404", "ErrorController");
-            }
-            anuntInDB.Description = anunt.Description;
-            anuntInDB.Title = anunt.Title;
-            anuntInDB.Price = anunt.Price;
-            _context.SaveChanges();
+            file.CopyTo(ms);
+            imageBytes = ms.ToArray();
         }
 
+        var Anunt = new Anunt()
+        {
+            Title = title,
+            Description = description,
+            Category = category,
+            Price = Int32.Parse(price),
+            County = county,
+            City = city,
+            NumarTelefon = phone,
+            Mail = mail,
+            Date = DateTime.Now,
+            AccountId = userId,
+            Image = imageBytes,
+        }; 
+        _context.Anunturi.Add(Anunt);
+        _context.SaveChanges();
+
+        
+
+    
         return RedirectToAction("Index", "Home");
     }
 
