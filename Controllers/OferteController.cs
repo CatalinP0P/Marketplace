@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Mvc;
+using PagedList;
 
 using Marketplace.Models;
 using Marketplace.Data;
 using Marketplace.Interfaces;
+
 
 namespace Marketplace.Controllers
 {
@@ -14,13 +17,13 @@ namespace Marketplace.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string categorie = "", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
+        public IActionResult Index(int pageIndex = 1, string categorie = "", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
         {
             var viewModel = new OferteViewModel();
-            viewModel.Anunturi = new List<Anunt>();
+            var anunturiFiltrate = new List<Anunt>();
             viewModel.Categories = new List<string>();
 
-            foreach ( var anunt in _context.Anunturi.ToList() )
+            foreach( var anunt in _context.Anunturi ) 
             {
                 if (
                 anunt.Category.Contains(categorie) &&
@@ -29,9 +32,23 @@ namespace Marketplace.Controllers
                 anunt.City.Contains(city) &&
                 anunt.Price >= minPrice && anunt.Price <= maxPrice )
                 {
-                    viewModel.Anunturi.Add(anunt);
+                    anunturiFiltrate.Add(anunt);
                 }
             }
+
+            var AnunturiPagina = new List<Anunt>();
+            double pageSize = 10;
+            int index = (int)(pageIndex * pageSize - pageSize);
+            int count = 0; 
+            while ( count < pageSize && index < anunturiFiltrate.Count() )
+            {
+                AnunturiPagina.Add(anunturiFiltrate[index]);
+                count++;
+                index++;
+            }
+
+
+            viewModel.pageCount = (int)Math.Ceiling(anunturiFiltrate.Count()/pageSize);
 
             foreach ( var categ in _context.Categories )
             {
@@ -48,9 +65,11 @@ namespace Marketplace.Controllers
                 maxPrice = maxPrice,
             };
             
+            viewModel.Anunturi = AnunturiPagina;
+            viewModel.pageIndex = pageIndex;
+            viewModel.anunturiCount = anunturiFiltrate.Count();
 
             return View("Index", viewModel);
-
         }
     }
 }

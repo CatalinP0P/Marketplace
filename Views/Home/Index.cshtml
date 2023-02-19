@@ -1,13 +1,14 @@
 ﻿@model Marketplace.ViewModels.HomeIndexViewModel;
 
-<div class="container-fluid" style="background-color: #f2f4f5;">
-    <div class="col-11 col-sm-10 mx-auto">
-        <div class="input-group pt-5 pb-5">
-            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                aria-describedby="search-addon" onkeydown="key_up()" id="searchBox"/>
-            
+<div class="container" style="background-color: #f2f4f5;">
+    <div class="row g-1 mt-4 mb-5 mx-2" >
+        <div class="col-sm-12 col-md-6">
+            <input type="search" class="searchBar" placeholder="Search" aria-label="Search"
+                aria-describedby="search-addon" id="searchBox"/>
+        </div>
+        <div class="col-sm-12 col-md-4">
             <div class="dropdown-custom" data-dropdown>
-                <button class="btn btn-outline-secondary btn-lg" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
+                <button class="btn searchBarButton" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
                 
                 <div class="dropdown-custom-menu" style="width: 200px">
                     <div >
@@ -16,12 +17,13 @@
                     </div>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
         </div>
 
-        
+        <div class="col-sm-8 col-md-2 mx-auto">
+            <button type="submit" class="btn btn-outline-custom" id="searchButton" >Cautare</button>
+        </div>
     </div>
+
 </div>
 
 <div class="container-fluid" style="background-color: white;">
@@ -50,15 +52,18 @@
                             
                             <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
                                 <div class="ratio ratio-4x3">
-                                    <img class="card-img-top px-3 pt-3" src="data:image/png;base64, @anunt.Image" data-id="@anunt.Id">
-                                    <!-- To do... -->
+                                    <img class="card-img-top px-3 pt-3" src="" data-id="@anunt.Id">
+                                    <!-- To do -->
                                 </div>
                             </a>
                             
                             <div class="card-body">
-                                <p class="text-dark px-1">@anunt.Title</p>
-                                <p class="text-muted px-1 pt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
-                                <p class="px-1 pt-2" style="font-weight: bold"> @anunt.Price Lei </p>
+                                <div style="height: 65px" >
+                                    <p class="text-dark px-1">@anunt.Title</p>
+
+                                </div>
+                                <p class="text-muted px-1 mt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
+                                <p class="px-1 " style="font-weight: bold"> @anunt.Price Lei </p>
                             </div>
 
                         </div>

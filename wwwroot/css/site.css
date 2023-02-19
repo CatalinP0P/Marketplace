@@ -37,11 +37,13 @@ body {
     .dropdown-custom
     {
         position: relative;
+        width: 100%;
     }    
     
     .dropdown-custom-button
     {
         cursor: pointer;
+        width: 100%;
         padding-top: 20px;
         padding-bottom: 20px;
         padding-left: 60px;
@@ -64,10 +66,12 @@ body {
       opacity: 0;
       transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
       transform: translateY(-25%);
+      pointer-events: none;
     }
     
     .dropdown-custom.active > .btn + .dropdown-custom-menu{
       opacity: 1;
+      pointer-events: auto;
       transform: translateY(0);
     }
 
@@ -104,4 +108,101 @@ body {
     .input-validation-error
     {
         color : red;
+    }
+
+    .pager
+    {
+      flex:auto;
+      flex-direction: row;
+      margin: 25px;
+      padding: 5px;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .pageLabel
+    {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 0px;
+      background-color: transparent;
+      color: #002f34;
+      font-weight: 600;
+      font-size: 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .hidden
+    {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .pageButton
+    {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 0px;
+      background-color: transparent;
+      color: #002f34;
+      font-weight: 600;
+      font-size: 15px;
+      margin: 5px;
+    }
+
+    .pageButton.active
+    {
+      border: 2px solid #002f34;
+    }
+
+    .pageButton:hover
+    {
+      border: 3px solid #002f34;
+    }
+
+
+  
+    .btn-outline-custom
+    {
+      background-color: #002f34;
+      border: 3px solid #002f34;
+      color : white;
+      width: 100%;
+      font-size: 20px;
+      font-weight: 600;
+      height : 60px;
+    }
+
+    .btn-outline-custom:hover
+    {
+      background-color: white;
+      color: #002f34;
+    }
+    
+    .searchBar
+    {
+      font-size: 20px;
+      font-weight: 200;
+      height: 60px;
+      padding: 20px;
+      width: 100%;
+      color: rgba(0, 0, 0, .5);
+      border: 0;
+      text-align: start;
+    }
+
+    .searchBarButton
+    {
+      font-size: 20px;
+      font-weight: 200;
+      width: 100%;
+      padding-left: 20px;
+      text-align: start;
+      height: 60px;
+      background-color: white;
+      color: rgba(0, 0, 0, .5);
+      border: 0;
     }

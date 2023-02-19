@@ -76,3 +76,5 @@
 /Users/catalinpop/Projects/Marketplace/obj/Debug/net7.0/Marketplace.genruntimeconfig.cache
 /Users/catalinpop/Projects/Marketplace/obj/Debug/net7.0/ref/Marketplace.dll
 /Users/catalinpop/Projects/Marketplace/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/catalinpop/Projects/Marketplace/bin/Debug/net7.0/PagedList.dll
+/Users/catalinpop/Projects/Marketplace/bin/Debug/net7.0/PagedList.Mvc.dll

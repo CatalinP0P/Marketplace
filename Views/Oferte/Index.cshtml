@@ -1,14 +1,14 @@
 @model OferteViewModel;
 
-<div class="container-fluid" style="background-color: #f2f4f5;">
-    <div class="col-11 col-sm-10 mx-auto">
-        
-        <div class="input-group pt-5 pb-5">
-            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+<div class="container" style="background-color: #f2f4f5;">
+    <div class="row g-1 mt-4 mb-5 mx-2" >
+        <div class="col-sm-12 col-md-6">
+            <input type="search" class="searchBar" placeholder="Search" aria-label="Search"
                 aria-describedby="search-addon" id="searchBox"/>
-            
+        </div>
+        <div class="col-sm-12 col-md-4">
             <div class="dropdown-custom" data-dropdown>
-                <button class="btn btn-outline-secondary btn-lg" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
+                <button class="btn searchBarButton" data-dropdown-button id="countyDropdownButton" > Toata Romania </button>      
                 
                 <div class="dropdown-custom-menu" style="width: 200px">
                     <div >
@@ -17,11 +17,13 @@
                     </div>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-outline-secondary btn-lg" id="searchButton" >Cauta acum</button>
         </div>
-    
+
+        <div class="col-sm-8 col-md-2 mx-auto">
+            <button type="submit" class="btn btn-outline-custom" id="searchButton" >Cautare</button>
+        </div>
     </div>
+
 </div>
 
 <div class="container">
@@ -56,13 +58,13 @@
         <div class="row" style="background-color: #f2f4f5;">
             @if (@Model.Anunturi != null && @Model.Anunturi.Count > 0)
             {
-                @if ( @Model.Anunturi.Count == 1 )
+                @if ( @Model.anunturiCount == 1 )
                 {
                     <h3 class="mt-3"> Am gasit un rezultat pentru tine </h3>
                 }
-                else if ( @Model.Anunturi.Count < 1000 )
+                else if ( @Model.anunturiCount < 1000 )
                 {
-                    <h3 class="mx-1"> Am gasit @Model.Anunturi.Count de rezultate pentru tine </h3>
+                    <h3 class="mx-1"> Am gasit @Model.anunturiCount de rezultate pentru tine </h3>
                 }
                 else
                 {
@@ -81,9 +83,12 @@
                             </a>
                             
                             <div class="card-body">
-                                <p class="text-dark px-1">@anunt.Title</p>
-                                <p class="text-muted px-1 pt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
-                                <p class="px-1 pt-2" style="font-weight: bold"> @anunt.Price Lei </p>
+                                <div style="height: 65px" >
+                                    <p class="text-dark px-1">@anunt.Title</p>
+
+                                </div>
+                                <p class="text-muted px-1 mt-2" style="font-size: small;"> @anunt.County - @anunt.Date.ToShortDateString() </p>
+                                <p class="px-1 " style="font-weight: bold"> @anunt.Price Lei </p>
                             </div>
 
                         </div>
@@ -94,35 +99,168 @@
             {
                 <h4 style="mx-1 text-dark"> Nu exista anunturi disponibile </h4>
             }
+            <div class="pager" >
+                
+                <label class="pageLabel" id="prevPage"> &lt; </label>
+                
+                @if ( Model.pageIndex == 3 )
+                {
+                    <button class="pageButton" data-id="1" id="pageButton" > 1 </button>
+                }  
+                @if ( Model.pageIndex > 3 )
+                {
+                    <button class="pageButton" data-id="1" id="pageButton" > 1 </button>
+                    <label> ... </label>
+                }
+                @for ( int i=Model.pageIndex-1; i < Model.pageIndex; i++ )
+                {
+                    if ( i > 0 )
+                    {
+                        <button class="pageButton" data-id="@i" id="pageButton" > @i </button>
+                    }
+                }
+                
+                <button class="pageButton active" data-id="@Model.pageIndex"> @Model.pageIndex </button>
+                
+                @for ( int i=Model.pageIndex+1; i<=Model.pageIndex+1; i++ )
+                {
+                    @if ( i < Model.pageCount )
+                    {
+                        <button class="pageButton" data-id="@i" id="pageButton" > @i </button>
+                    }
+                }    
+                @if ( @Model.pageIndex+2 < @Model.pageCount )
+                {
+                    <label> ... </label>
+                    <button class="pageButton" data-id="@Model.pageCount" id="pageButton" > @Model.pageCount </button>
+                }
+                @if ( @Model.pageIndex+2 >= @Model.pageCount )
+                {
+                    @if ( Model.pageIndex < Model.pageCount )  
+                    {
+                        <button class="pageButton" data-id="@Model.pageCount" id="pageButton" > @Model.pageCount </button>
+                    }
+                }
+            
 
+                
+                <label class="pageLabel" id="nextPage"> > </label>
+                
+            </div>
         </div>
     </div>
-
 </div>
 
-<style>
-
-.searchbar
-{
-    display: flex;
-}
-
-.textbox
-{
-    width: 500px;
-    height: 50px;
-    font-size: 25px;
-    padding-left: 10px;
-    z-index: 5;
-    border: 1px solid black;
-}
-</style>
 
 
 
 @section Scripts
 {
     <script>
+        function changeCounty()
+        {
+            dropDownButton.text(countyDropdown.val())
+        }
+
+        function changeCity()
+        {
+            dropDownButton.text(dropDownButton.text()+ ", " + cityDropDown.val())
+            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
+            {
+                dropdown.classList.remove("active")
+            })
+        }
+        
+
+        var dropDownButton = $("#countyDropdownButton")
+        var countyDropdown = $("#countyDropDown")
+        var cityDropDown = $("#cityDropDown");
+        var searchButton = $("#searchButton");
+        var searchBox = $("#searchBox");
+        var filterButton = $("#filterButton");
+
+        var pageCount = @Html.Raw(Json.Serialize(@Model.pageCount))
+        const currentPageIndex = @Html.Raw(Json.Serialize(@Model.pageIndex))
+
+        function loadFilters()
+        {
+            var url = "http://localhost:5064/api/location/counties";
+            $.get(url, function(data)
+            {
+                $.each(data, function(index)
+                {
+                    countyDropdown.append("<option>"+ data[index] +"</option>");
+                })
+            })
+            
+            
+            <!-- Filters -->
+            var q = @Html.Raw(Json.Serialize(Model.Filters.q))
+            var city = @Html.Raw(Json.Serialize(Model.Filters.City))
+            var county = @Html.Raw(Json.Serialize(Model.Filters.County))
+            var minPrice = @Html.Raw(Json.Serialize(Model.Filters.minPrice))
+            var maxPrice = @Html.Raw(Json.Serialize(Model.Filters.maxPrice))
+            var category = @Html.Raw(Json.Serialize(Model.Filters.Category))
+            
+            searchBox.val(q);
+            if ( minPrice != 0 )
+                $("#minPriceTextBox").val(minPrice);
+            if ( maxPrice != 1000000000 )
+                $("#maxPriceTextBox").val(maxPrice);
+            if ( category != "" )
+                $("#categoryTextBox").val(category);
+            if ( county != "" )
+                dropDownButton.val(county);
+        }
+
+        document.addEventListener("click", (e) => 
+        {
+            if ( e.target.matches("#pageButton") )
+            {
+                var clickedButton = e.target.closest("#pageButton")
+                var href = location.href;
+
+                var param1 = "pageIndex="+currentPageIndex;
+                var param2 = "pageIndex="+clickedButton.innerText
+                href = href.replace(param1, param2)
+                
+                location.href = href;
+            }
+            if ( e.target.matches(".pageLabel") )
+            {
+                var page = currentPageIndex;
+                var clickedLabel = e.target.closest(".pageLabel")
+                if ( clickedLabel.id == "nextPage" )
+                    page++;
+                if ( clickedLabel.id == "prevPage" )
+                    page--;
+            
+                var param1 = "pageIndex="+currentPageIndex;
+                var param2 = "pageIndex="+page;
+                
+                location.href = location.href.replace(param1, param2);
+            }
+
+        })
+
+        window.addEventListener("load", () => 
+        {
+            loadFilters();
+            if ( !location.href.includes("pageIndex") )
+                location.href += "&pageIndex=1"
+            
+            if ( currentPageIndex == 1 )
+            {
+                document.getElementById("prevPage").classList.add("hidden")
+            }
+            if ( currentPageIndex == pageCount )
+            {
+                document.getElementById("nextPage").classList.add("hidden")
+            }
+
+            console.log("Fully loaded")
+        })
+
         @foreach (var anunt in Model.Anunturi)
         {
             <text>
@@ -135,6 +273,8 @@
 
             </text>
         }
+
+
 
         var model = @Html.Raw(Json.Serialize(Model));
 
@@ -157,60 +297,9 @@
             })
         })
 
-        var dropDownButton = $("#countyDropdownButton")
-        var countyDropdown = $("#countyDropDown")
-        var cityDropDown = $("#cityDropDown");
 
-        function changeCounty()
-        {
-            dropDownButton.text(countyDropdown.val())
-        }
-
-        function changeCity()
-        {
-            dropDownButton.text(dropDownButton.text()+ ", " + cityDropDown.val())
-            document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
-            {
-                dropdown.classList.remove("active")
-            })
-        }
         
-
-        $(document).ready(function()
-        {
-        
-            var url = "http://localhost:5064/api/location/counties";
-            $.get(url, function(data)
-            {
-                $.each(data, function(index)
-                {
-                    countyDropdown.append("<option>"+ data[index] +"</option>");
-                })
-            })
-
-            var searchButton = $("#searchButton");
-            var searchBox = $("#searchBox");
-            var filterButton = $("#filterButton");
-
-            <!-- Filters -->
-            var q = @Html.Raw(Json.Serialize(Model.Filters.q))
-            var city = @Html.Raw(Json.Serialize(Model.Filters.City))
-            var county = @Html.Raw(Json.Serialize(Model.Filters.County))
-            var minPrice = @Html.Raw(Json.Serialize(Model.Filters.minPrice))
-            var maxPrice = @Html.Raw(Json.Serialize(Model.Filters.maxPrice))
-            var category = @Html.Raw(Json.Serialize(Model.Filters.Category))
-            
-            searchBox.val(q);
-            if ( minPrice != 0 )
-                $("#minPriceTextBox").val(minPrice);
-            if ( maxPrice != 1000000000 )
-                $("#maxPriceTextBox").val(maxPrice);
-            if ( category != "" )
-                $("#categoryTextBox").val(category);
-            if ( county != "" )
-                dropDownButton.val(county);
-
-            filterButton.on("click", function()
+        filterButton.on("click", function()
             {
                 var category =  $("#categoryTextBox").val();
                 var minPrice = $("#minPriceTextBox").val();
@@ -244,8 +333,11 @@
                 }
 
                 location.href = url;
-            });     
+            });  
 
+        $(document).ready(function()
+        {
+            
             countyDropdown.on("change", function()
             {
                 cityDropDown.empty();

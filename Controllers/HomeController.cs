@@ -1,13 +1,15 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using PagedList;
+using PagedList.Mvc;
 
 using Marketplace.Models;
 using Marketplace.Data;
 using Marketplace.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Marketplace.Interfaces;
-using System.Security.Claims;
 
 namespace Marketplace.Controllers;
 
