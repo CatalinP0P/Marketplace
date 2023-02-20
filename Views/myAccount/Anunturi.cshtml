@@ -1,0 +1,144 @@
+@model List<Anunt>;
+
+
+<div class="container-fluid g-1" style="background-color: white;">   
+    <div class="view-title">
+        <h1> Anunturile tale </h1>
+    </div>
+</div>
+
+<div class="container g-1">
+    @foreach (var anunt in Model)
+    {
+        <div class="row" style="margin: 25px" > 
+            <div class="card my-2 anuntCard" style="position: relative;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <div class="ratio ratio-4x3">
+                            <img class="card-img-top py-3" src="" data-id="@anunt.Id">
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-12 col-md-5">
+                        <label class="anunt-title">@anunt.Title</label>
+                        <label class="anunt-date">@anunt.Date.ToShortDateString()</label>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="text-align-end">
+                            <div class="col">
+                                <label class="anunt-price" >@anunt.Price Lei</label>
+                                <button class="anunt-edit" type="submit" data-id="@anunt.Id" id="editButton" >
+                                    @Html.Partial("editSVGPartial")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+<script> 
+    document.addEventListener("click", e => 
+    {
+        var isEditButtonClicked = e.target.matches("#editButton");
+        if ( isEditButtonClicked )
+        {
+            const clickedButton = e.target.closest(".anunt-edit")
+            var href = "/Home/Edit?id=" + clickedButton.getAttribute("data-id")
+            location.href = href;
+        }
+    })
+
+</script>
+
+<style>
+    
+    .view-title
+    {
+        text-align: center;
+        padding-top: 50px;
+        padding-bottom: 30px;
+        margin-bottom: 50px;
+    }
+
+    .anuntCard:hover .anunt-edit
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .anunt-edit
+    {
+        opacity: 0;
+        transform: translateY(-50%);
+        transition: all .3s linear .1s;
+        width: 50px;
+        height: 50px;
+        margin-right:20px;
+        vertical-align: bottom;
+        background-color: #002f34;
+        color:white;
+        border-radius: 50%;
+        border: 0;
+        position: absolute;
+        top:0;
+        left: 0;
+        margin-left: -20px;
+        margin-top: -20px;
+    }
+
+    .anunt-price
+    {
+        display: block;
+        vertical-align: top;
+        font-weight: 800;
+        font-size: 20px;
+        margin: 20px;
+        text-align: end;
+    }
+    
+    .text-align-end
+    {
+        text-align: end;
+    }
+
+    .anunt-title
+    {
+        display: block;
+        vertical-align: top;
+        font-size: 24px;
+        font-weight: 400;
+        padding-top : 20px;
+    }
+
+    .anunt-date
+    {
+        display: block;
+        position:absolute;
+        bottom:0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.3);
+        vertical-align: bottom;
+        padding-bottom: 20px;
+    }
+</style>
+
+<script>
+    @foreach (var anunt in Model)
+    {
+        <text>
+            var id = @Html.Raw(Json.Serialize(@anunt.Id))
+            var image = @Html.Raw(Json.Serialize(@anunt.Image))
+
+            var parameter = '[data-id="' + id + '"]'
+            var img = document.querySelector(parameter)
+            img.src = "data:image/png;base64," + image
+
+        </text>
+    }
+</script>

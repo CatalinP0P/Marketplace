@@ -3,18 +3,22 @@
 <div class="container g-3">
     @using (@Html.BeginForm("Save", "Home", FormMethod.Post, new { @enctype="multipart/form-data"}))
     {
+        @Html.ValidationSummary()
+
         <h2 class="ms-2 mt-3"> Publica un anunt </h2>
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-3 my-3" >
                 <label> Titlu </label>
                 
                 <div class="col-12 col-md-6">
-                    <input class="form-control background" type="text" name="title" id="titleInput">  
+                    @Html.TextBoxFor(m=>m.Anunt.Title, new { @class="form-control background", @Id ="titleInput" })
+                    @Html.ValidationMessageFor( m=>m.Anunt.Title )
                 </div>
                 
                 <label class="mt-2"> Categorie </label>
                 <div class="col-12 col-md-4">
-                    @Html.DropDownList("category", new SelectList(new List<string>()), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
+                    @Html.DropDownListFor(m=>m.Anunt.Category, new SelectList(new List<string>()), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
+                    @Html.ValidationMessageFor( m=>m.Anunt.Category )
                 </div>
             </div>
         </div>
@@ -32,7 +36,8 @@
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-3 my-3">
                 <label> Descriere </label>
-                @Html.TextArea("description", new { @class = "form-control background description", @placeholder = "Incearca sa scrii ceea ce ai vrea tu sa aflii daca te-ai uita la acest anunt", @name="description" }  )
+                @Html.TextAreaFor( m=>m.Anunt.Description, new { @class = "form-control background description", @placeholder = "Incearca sa scrii ceea ce ai vrea tu sa aflii daca te-ai uita la acest anunt", @name="description" }  )
+                @Html.ValidationMessageFor( m=>m.Anunt.Description )
             </div>
         </div>
         
@@ -41,7 +46,8 @@
                 <label> Pret </label>
                 <div class="row">
                     <div class="col-6">
-                        <input type="text" name="price" class="form-control background">    
+                        @Html.TextBoxFor( m=>m.Anunt.Price, new { @class="form-control background" } )
+                        @Html.ValidationMessageFor( m=>m.Anunt.Price )
                     </div>
                 </div>
             </div>
@@ -53,10 +59,12 @@
                 <div class="row">
                     <label> Locatie </label>
                     <div class="col-12 col-md-6 mb-2">
-                        @Html.DropDownList("county", new SelectList(@Model.Counties.ToList()), "Alege Judetul", new { @class="form-control background", @Id="countyDropDown", @name="county" })
+                        @Html.DropDownListFor(m=>m.Anunt.County, new SelectList(@Model.Counties.ToList()), "Alege Judetul", new { @class="form-control background", @Id="countyDropDown", @name="county" })
+                        @Html.ValidationMessageFor( m=>m.Anunt.County )
                     </div>
                     <div class="col-12 col-md-6">
-                        @Html.DropDownList("city", new SelectList(@Model.Counties.ToList()), "Alege Oras/Localitate", new { @class = "form-control disabled background", @Id = "cityDropDown", @name="city" })
+                        @Html.DropDownListFor( m=> m.Anunt.City, new SelectList(@Model.Counties.ToList()), "Alege Oras/Localitate", new { @class = "form-control disabled background", @Id = "cityDropDown", @name="city" })
+                        @Html.ValidationMessageFor( m=>m.Anunt.City )
                     </div>
                 </div>
                 
@@ -68,11 +76,13 @@
                 <label> Date personale </label>
                 <div class="row">
                     <div class="col-12 col-md-6 mb-2">
-                        <input type="mail" name="mail" class="form-control background" placeholder="Mail" >  
+                        @Html.TextBoxFor( m=>m.Anunt.Mail, new { @class="form-control background", @placeholder="Mail"})
+                        @Html.ValidationMessageFor( m=>m.Anunt.Mail )
                     </div>
                 
                     <div class="col-12 col-md-6">
-                        <input type="tel" name="phone" class="form-control background" placeholder="07...." >
+                        @Html.TextBoxFor( m=>m.Anunt.NumarTelefon, new { @class="form-control background" } )
+                        @Html.ValidationMessageFor( m=>m.Anunt.NumarTelefon )
                     </div>
                 </div>
             </div>
@@ -83,6 +93,9 @@
                     <button id="formButton" class="btn btn-custom text-white formButton" onclick="submitForms()"> Publica un anunt </button>
                 </div>
         </div>
+        
+        @Html.HiddenFor(m=>m.Anunt.Image)
+        @Html.HiddenFor(m=>m.Anunt.Id)
     
         @Html.AntiForgeryToken();
     }

@@ -81,9 +81,7 @@ public class HomeController : Controller
         return View("Form", viewModel);
     }
 
-    [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(string title, string description, string category, string price, string phone, string mail, string county, string city, IFormFile file)
+    public async Task<IActionResult> Edit(int id)
     {
         var userId = "notfound";
         var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -93,33 +91,88 @@ public class HomeController : Controller
             userId = claims.Value;
         }
 
+        var anuntInDb = _context.Anunturi.SingleOrDefault( m=>m.Id == id );
+        if ( anuntInDb == null || anuntInDb.AccountId != userId )
+        {
+            return RedirectToAction("Error404", "Error");
+        }
+
+        var viewModel = new FormViewModel();
+        viewModel.Anunt = anuntInDb;
+        viewModel.Counties = new List<string>();
+        viewModel.Categories = _context.Categories.ToList();
+
+        List<County> Counties = await _locationService.GetCounties();
+        foreach (var county in Counties)
+        {
+            if (county.Nume != null)
+                viewModel.Counties.Add(county.Nume);
+        }
+
+        return View("Form", viewModel);
+    }
+
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Save(Anunt anunt, IFormFile file)
+    {
+        var userId = "notfound";
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+        if (claims != null)
+        {
+            userId = claims.Value;
+        }
+        anunt.AccountId = userId;
+
+        if ( !ModelState.IsValid )
+        {
+            var viewModel = new FormViewModel();
+            viewModel.Anunt = anunt;
+            viewModel.Counties = new List<string>();
+            viewModel.Categories = _context.Categories.ToList();
+
+            List<County> Counties = await _locationService.GetCounties();
+            foreach (var county in Counties)
+            {
+                if (county.Nume != null)
+                    viewModel.Counties.Add(county.Nume);
+            }
+
+            return View("Form", viewModel);
+        }
+
+        anunt.Date = DateTime.Now;
+        
         byte[] imageBytes;
         using ( var ms = new MemoryStream() )
         {
             file.CopyTo(ms);
             imageBytes = ms.ToArray();
         }
+        anunt.Image = imageBytes;
 
-        var Anunt = new Anunt()
+        if( anunt.Id == 0 )
         {
-            Title = title,
-            Description = description,
-            Category = category,
-            Price = Int32.Parse(price),
-            County = county,
-            City = city,
-            NumarTelefon = phone,
-            Mail = mail,
-            Date = DateTime.Now,
-            AccountId = userId,
-            Image = imageBytes,
-        }; 
-        _context.Anunturi.Add(Anunt);
-        _context.SaveChanges();
+            _context.Anunturi.Add(anunt);
+            _context.SaveChanges();
+        }
+        else 
+        {
+            var anuntInDb = _context.Anunturi.First(m=>m.Id == anunt.Id);
+            anuntInDb.Title = anunt.Title;
+            anuntInDb.Description = anunt.Description;
+            anuntInDb.Price = anunt.Price;
+            anuntInDb.Category = anunt.Category;
+            anuntInDb.County = anunt.County;
+            anuntInDb.City = anunt.City;
+            anuntInDb.Mail = anunt.Mail;
+            anuntInDb.NumarTelefon = anunt.NumarTelefon;
+            anuntInDb.Image = anunt.Image;
+            
+            _context.SaveChanges();
+        }
 
-        
-
-    
         return RedirectToAction("Index", "Home");
     }
 
