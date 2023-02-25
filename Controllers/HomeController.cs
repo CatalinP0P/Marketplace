@@ -114,7 +114,7 @@ public class HomeController : Controller
 
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(Anunt anunt, IFormFile file)
+    public async Task<IActionResult> Save(Anunt anunt, IFormFile? file)
     {
         var userId = "notfound";
         var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -144,13 +144,16 @@ public class HomeController : Controller
 
         anunt.Date = DateTime.Now;
         
-        byte[] imageBytes;
-        using ( var ms = new MemoryStream() )
+        if ( file != null )
         {
-            file.CopyTo(ms);
-            imageBytes = ms.ToArray();
+            byte[] imageBytes;
+            using ( var ms = new MemoryStream() )
+            {
+                file.CopyTo(ms);
+                imageBytes = ms.ToArray();
+            }
+            anunt.Image = imageBytes;
         }
-        anunt.Image = imageBytes;
 
         if( anunt.Id == 0 )
         {

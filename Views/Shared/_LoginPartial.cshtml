@@ -13,6 +13,9 @@
             <button  type="submit" class="nav-link btn btn-link text-white">Logout</button>
         </form>
     </li>
+    <li class="nav-item" >
+        <a class="nav-link text-white font-weight-bold anunturiButton" asp-action="anunturi" asp-controller="myAccount" id="anunturiButton"> Anunturile mele </a>
+    </li>
 }
 else
 {
@@ -24,3 +27,11 @@ else
     </li>
 }
 </ul>
+
+<style>
+    .anunturiButton
+    {
+        margin-top: 2px;
+        margin-right: 10px;
+    }
+</style>

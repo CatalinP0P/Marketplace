@@ -133,7 +133,6 @@
                     categorieDropDown.append("<option>" + data[index] + "</option>");
                 })
             });
-
             countyDropDown.change( function()
             {
                 var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropDown.val();
@@ -149,12 +148,32 @@
                         {
                             cityDropDown.append("<option> " + data[city] + " </option>")
                         })
+                    })
+                })
+            })
 
-                    });
+            <!-- Reloading the Category,county and city -->
+            var paramValues = window.location.search;
+            var params = new URLSearchParams(paramValues);
+            var id = params.get("id");
 
-                });
-                
-            } )
+            if ( id != null )
+            {
+                document.getElementById("formButton").innerText = "Salveaza"
+
+                const request = new XMLHttpRequest();
+                request.open("GET", "/api/anunt/" + id);
+                request.send();
+                request.onload = () => 
+                {
+                    var JsonData = JSON.parse(request.response)
+                    imagePreview.src = 'data:image/png;base64,' + JsonData.image
+                    categorieDropDown.val(JsonData.category)
+                    countyDropDown.val(JsonData.county)
+                }
+            }
         });
+        
+        
     </script>
 }

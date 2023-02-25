@@ -125,8 +125,8 @@
             let currentDropDown;
             if ( isDropDownButton )
             {
-            currentDropDown = e.target.closest("[data-dropdown]");
-            currentDropDown.classList.toggle("active");
+                currentDropDown = e.target.closest("[data-dropdown]");
+                currentDropDown.classList.toggle("active");
             }
 
             document.querySelectorAll("[data-dropdown].active").forEach( dropdown =>
@@ -168,6 +168,23 @@
                     countyDropDown.append("<option>"+ data[index] +"</option>");
                 })
             })
+            
+            searchButton.on("click", function()
+            {
+                if ( searchBox.val() != "" || countyDropDown.val() != "Toata Romania" )
+                {
+                    var url = "Oferte/Index?q=" + searchBox.val();
+                    if ( countyDropDown.val() != "Toata Romania" && countyDropDown.val() != "" )
+                    {
+                        url += "&county=" + countyDropDown.val();
+                    }
+                    if ( cityDropDown.val() != "Toate Localitatile" )
+                    {
+                        url += "&city=" + cityDropDown.val();
+                    }
+                    location.href = url;
+                }
+            });
 
             countyDropDown.on("change", function()
             {
@@ -187,25 +204,12 @@
                     }) 
                 });
             })
-
-            <!-- Searching -->
-            searchButton.on("click", function()
-            {
-                if ( searchBox.val() != "" || countyDropDown.val() != "Toata Romania" )
-                {
-                    var url = "Oferte/Index?q=" + searchBox.val();
-                    if ( countyDropDown.val() != "Toata Romania" && countyDropDown.val() != "" )
-                    {
-                        url += "&county=" + countyDropDown.val();
-                    }
-                    if ( cityDropDown.val() != "Toate Localitatile" )
-                    {
-                        url += "&city=" + cityDropDown.val();
-                    }
-                    location.href = url;
-                }
-            });
         });
+
+            
+
+        <!-- Searching -->
+            
 
     </script>
 }

@@ -59,3 +59,22 @@
 </body>
 </html>
 
+<script>
+    var button = document.getElementById("anunturiButton");
+    button.classList.add("visible")
+</script>
+
+<style>
+    .anunturiButton
+    {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .anunturiButton.visible
+    {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+</style>

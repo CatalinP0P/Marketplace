@@ -37,7 +37,7 @@ namespace Marketplace.Controllers
             }
 
             var AnunturiPagina = new List<Anunt>();
-            double pageSize = 10;
+            double pageSize = 5;
             int index = (int)(pageIndex * pageSize - pageSize);
             int count = 0; 
             while ( count < pageSize && index < anunturiFiltrate.Count() )
