@@ -35,6 +35,7 @@ namespace Marketplace.Controllers.Api
         {
             var anuntInDb = _context.Anunturi.Single(m=>m.Id == id);
             _context.Anunturi.Remove(anuntInDb);
+            _context.SaveChanges();
         }
     }
 }

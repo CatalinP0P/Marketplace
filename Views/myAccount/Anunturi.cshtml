@@ -1,5 +1,27 @@
 @model List<Anunt>;
 
+<head>
+    <style>
+        .btn-popup
+        {
+            padding: 5px 75px 5px 75px;
+            display: block;
+            background-color: #002f34;
+            color:white;
+            font-size: 25px;
+            font-weight: 400;
+            border: 2px solid #002f34;
+            border-radius: 25px;
+        }
+
+        .btn-popup:hover
+        {
+            color: #002f34;
+            background-color: white;
+        }
+    </style>
+
+</head>
 
 <div class="container-fluid g-1" style="background-color: white;">   
     <div class="view-title">
@@ -7,10 +29,18 @@
     </div>
 </div>
 
-<div class="container g-1">
+<div class="overlay" id="overlay"></div>
+
+<div class="popup" id="popup" data-anunt-id="" >
+    <h2> Sigur vrei sa dezactivezi anuntul? </h2>
+    <button class="btn-popup mx-auto my-2 mt-5" onclick="closePopup()"> Nu </button>
+    <button class="btn-popup mx-auto" onclick="removeAnunt()"> Da </button>
+</div>
+
+<div class="container g-1" style="margin-bottom: 70px">
     @foreach (var anunt in Model)
     {
-        <div class="row" style="margin: 25px" > 
+        <div class="row mt-2 mx-4" id="@anunt.Id" > 
             <div class="card my-2 anuntCard" style="position: relative;">
                 <div class="row">
                     <div class="col-sm-12 col-md-4">
@@ -27,7 +57,7 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="text-align-end">
                             <div class="col">
-                                <label class="anunt-price" >@anunt.Price Lei</label>
+                                <label class="anunt-price pb-5" >@anunt.Price Lei</label>
                                 <button class="anunt-edit" type="submit" data-id="@anunt.Id" id="editButton" >
                                     @Html.Partial("editSVGPartial")
                                 </button>
@@ -38,9 +68,9 @@
                                     </a>
 
                                     <div class="dots-dropdown-menu">
-                                        <label class="dropdown-option"> Dezactiveaza </label>
-                                        <label class="dropdown-option"> Editeaza </label>
-                                        <label class="dropdown-option"> Distribuie </label>
+                                        <label class="dropdown-option" id="removeDropDownButton" data-anunt-id="@anunt.Id"> Dezactiveaza </label>
+                                        <label class="dropdown-option" id="editDropDownButton" > Editeaza </label>
+                                        <label class="dropdown-option" onclick="copyLink(@anunt.Id)" > Copiaza Link </label>
                                     </div>
                                 </div>
                             </div>
@@ -55,6 +85,63 @@
 </div>
 
 <script> 
+    @foreach (var anunt in Model)
+    {
+        <text>
+            var id = @Html.Raw(Json.Serialize(@anunt.Id))
+            var image = @Html.Raw(Json.Serialize(@anunt.Image))
+
+            var parameter = '[data-id="' + id + '"]'
+            var img = document.querySelector(parameter)
+            img.src = "data:image/png;base64," + image
+        </text>
+    }
+
+    function showPopup()
+    {
+        var popup = document.getElementById("popup")
+        var overlay = document.getElementById("overlay")
+        popup.classList.add("popup-show");
+        overlay.classList.add("overlay-show");
+    }
+
+    function closePopup()
+    {
+        var popup = document.getElementById("popup")
+        var overlay = document.getElementById("overlay")
+        popup.classList.remove("popup-show");
+        overlay.classList.remove("overlay-show");
+    }
+
+    function closeAllDropdowns()
+    {
+        document.querySelectorAll("[data-dropdown].active").forEach( dropdown => 
+        {
+            dropdown.classList.remove("active") 
+        })
+    }
+    
+    var anuntId = 0;
+
+    function removeAnunt()
+    {
+        var href = "/api/anunt/" + anuntId;
+        var request = new XMLHttpRequest();
+        request.open("DELETE", href)
+        request.send()
+        console.log(request.status)
+        
+        var div = document.getElementById(anuntId);
+        div.remove();
+        closePopup();
+    }
+
+    function copyLink(id)
+    {
+        var link = window.location.origin + "/Oferta/Index/" + id;
+        navigator.clipboard.writeText(link);
+    }
+
     document.addEventListener("click", e => 
     {
         var isEditButtonClicked = e.target.matches("#editButton");
@@ -64,6 +151,25 @@
             var href = "/Home/Edit?id=" + clickedButton.getAttribute("data-id")
             location.href = href;
         }
+        
+        const isDropDownButton = e.target.matches(".anunt-dots");
+        if ( isDropDownButton )
+        {
+            currentDropDown = e.target.closest("[data-dropdown]");
+            currentDropDown.classList.toggle("active")
+            return;
+        }
+
+        const isRemoveDropDownButton = e.target.matches("#removeDropDownButton")
+        if ( isRemoveDropDownButton )
+        {
+            showPopup();
+            var clickedButton = e.target.closest("#removeDropDownButton");
+            anuntId = clickedButton.getAttribute("data-anunt-id");
+        }
+
+        closeAllDropdowns();
+        
     })
 
 </script>
@@ -106,7 +212,6 @@
 
     .anunt-price
     {
-        display: block;
         vertical-align: top;
         font-weight: 800;
         font-size: 20px;
@@ -123,7 +228,7 @@
     {
         display: block;
         vertical-align: top;
-        font-size: 24px;
+        font-size: clamp( 20px, 2vw, 30px);
         font-weight: 400;
         padding-top : 20px;
     }
@@ -152,12 +257,12 @@
         margin-left: -60px;
         margin-top: -50px;
     }
-
+   
 
     .dots-dropdown-menu
     {
         position: absolute;
-        z-index: 10;
+        z-index: 9;
         background-color: white;
         border: 1px solid black;
         border-radius: 5px;
@@ -166,16 +271,16 @@
         opacity: 0;
         pointer-events: none;
         transition: all linear .3s;
-    }
+    } 
 
     .dropdown-option
     {
         padding: 10px;
         display: block;
         color:black;
-        font-size: 30px;
+        font-size: 18px;
         font-weight: 300;
-        z-index: 10;
+        z-index: 9;
         text-align: center;
     }
 
@@ -192,35 +297,3 @@
     }
 
 </style>
-
-<script>
-    @foreach (var anunt in Model)
-    {
-        <text>
-            var id = @Html.Raw(Json.Serialize(@anunt.Id))
-            var image = @Html.Raw(Json.Serialize(@anunt.Image))
-
-            var parameter = '[data-id="' + id + '"]'
-            var img = document.querySelector(parameter)
-            img.src = "data:image/png;base64," + image
-        </text>
-    }
-
-    document.addEventListener("click", e => 
-    {
-        const isDropDownButton = e.target.matches(".anunt-dots");
-        if ( isDropDownButton )
-        {
-            currentDropDown = e.target.closest("[data-dropdown]");
-            currentDropDown.classList.toggle("active")
-            return;
-        }
-
-        document.querySelectorAll("[data-dropdown].active").forEach( dropdown => 
-        {
-            if ( dropdown != e.target.closest("[data-dropdown]") )
-                dropdown.classList.remove("active") 
-        })
-
-    });
-</script>
