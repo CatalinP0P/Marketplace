@@ -44,9 +44,11 @@
             <div class="card my-2 anuntCard" style="position: relative;">
                 <div class="row">
                     <div class="col-sm-12 col-md-4">
-                        <div class="ratio ratio-4x3">
-                            <img class="card-img-top py-3" src="" data-id="@anunt.Id">
-                        </div>
+                        <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
+                            <div class="ratio ratio-4x3">   
+                                    <img class="card-img-top py-3" src="" data-id="@anunt.Id">
+                            </div>
+                        </a>
                     </div>
                     
                     <div class="col-sm-12 col-md-5">
@@ -69,7 +71,7 @@
 
                                     <div class="dots-dropdown-menu">
                                         <label class="dropdown-option" id="removeDropDownButton" data-anunt-id="@anunt.Id"> Dezactiveaza </label>
-                                        <label class="dropdown-option" id="editDropDownButton" > Editeaza </label>
+                                        <label class="dropdown-option" id="editDropDownButton" onclick="edit(@anunt.Id)" > Editeaza </label>
                                         <label class="dropdown-option" onclick="copyLink(@anunt.Id)" > Copiaza Link </label>
                                     </div>
                                 </div>
@@ -95,6 +97,12 @@
             var img = document.querySelector(parameter)
             img.src = "data:image/png;base64," + image
         </text>
+    }
+
+    function edit(id)
+    {
+        var href = "/Home/Edit?id=" + id;
+        location.href = href;
     }
 
     function showPopup()

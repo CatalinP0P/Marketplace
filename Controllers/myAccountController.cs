@@ -17,8 +17,6 @@ namespace Marketplace.Controllers
         public myAccountController(ApplicationDbContext context)
         {
             _context = context;
-
-            
         }
 
         public IActionResult Index()

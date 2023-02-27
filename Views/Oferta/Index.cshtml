@@ -10,7 +10,7 @@
 
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-4 my-4">
-                <p class="text-muted" > @Model.Date </p>
+                <p class="text-muted" > @Model.Date.ToShortDateString() </p>
                 <h1> @Model.Title </h1> 
                 <h3 style="font-weight: bold" class="mb-1" > @Model.Price Lei </h3>
                 <hr>
@@ -45,7 +45,7 @@
         <label class="mt-4"> Tel: @Model.NumarTelefon </label>
       </div>
  
-      <div class="row">
+      <div class="row" style="margin-bottom: -15px;">
         <button class="btn btn-custom" onClick="closeContact()" > Close </button>
       </div>
 
@@ -62,9 +62,31 @@
 </script>
 
 <style>
-    .btn:hover
+    .card .btn
     {
-        color: #cecece;
+        border: 3px solid #002f34;
+        font-weight: 400;
+    }
+
+    .popup .btn
+    {
+        border: 3px solid #002f34;
+        font-weight: 400;
+    }
+
+    .popup .btn:hover 
+    {
+        border: 3px solid #002f34;
+        color: #002f34;
+        background-color: white;
+    }
+
+
+    .card .btn:hover 
+    {
+        border: 3px solid #002f34;
+        color: #002f34;
+        background-color: white;
     }
 
     .background
@@ -77,10 +99,6 @@
     {
         height: 200px;
     }
-
-
-
-
 
 </style>
 
