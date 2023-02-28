@@ -17,7 +17,7 @@ namespace Marketplace.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int pageIndex = 1, string categorie = "", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
+        public IActionResult Index(int pageIndex = 1, string categorie = "", string sortMethod = "random", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
         {
             var viewModel = new OferteViewModel();
             var anunturiFiltrate = new List<Anunt>();
@@ -28,11 +28,43 @@ namespace Marketplace.Controllers
                 if (
                 anunt.Category.Contains(categorie) &&
                 anunt.County.Contains(county) &&
-                anunt.Title.Contains(q) &&
+                anunt.Title.ToLower().Contains(q.ToLower()) &&
                 anunt.City.Contains(city) &&
                 anunt.Price >= minPrice && anunt.Price <= maxPrice )
                 {
                     anunturiFiltrate.Add(anunt);
+                }
+            }
+
+            if ( sortMethod == SortingMethods.price_asc.ToString() )
+            {
+                for ( int i=0; i<anunturiFiltrate.Count; i++ )
+                {
+                    for ( int j=i+1; j<anunturiFiltrate.Count; j++ )
+                    {
+                        if ( anunturiFiltrate[i].Price > anunturiFiltrate[j].Price ) 
+                        {
+                            var aux = anunturiFiltrate[i];
+                            anunturiFiltrate[i] = anunturiFiltrate[j];
+                            anunturiFiltrate[j] = aux;
+                        }
+                    }
+                }
+            }
+            
+            if ( sortMethod == SortingMethods.price_desc.ToString() )
+            {
+                for ( int i=0; i<anunturiFiltrate.Count; i++ )
+                {
+                    for ( int j=i+1; j<anunturiFiltrate.Count; j++ )
+                    {
+                        if ( anunturiFiltrate[i].Price < anunturiFiltrate[j].Price ) 
+                        {
+                            var aux = anunturiFiltrate[i];
+                            anunturiFiltrate[i] = anunturiFiltrate[j];
+                            anunturiFiltrate[j] = aux;
+                        }
+                    }
                 }
             }
 
@@ -64,6 +96,8 @@ namespace Marketplace.Controllers
                 minPrice = minPrice,
                 maxPrice = maxPrice,
             };
+
+            
             
             viewModel.Anunturi = AnunturiPagina;
             viewModel.pageIndex = pageIndex;

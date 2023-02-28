@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="col-sm-8 col-md-2 mx-auto">
+        <div class="col-sm-12 col-md-2 mx-auto">
             <button type="submit" class="btn btn-outline-custom" id="searchButton" >Cautare</button>
         </div>
     </div>
@@ -51,7 +51,146 @@
             </div>
         </div>
         <hr>
+        <div class="row">
+            <div class="col-4" style="margin-left: 5px;">
+                <label> Sorteaza dupa </label>
+                <div class="sort-dropdown" data-sort-dropdown>
+                    <button id="sortDropdownButton" data-sort-dropdown-button  > Aleatoriu </button>
+                    <div class="sort-dropdown-menu">
+                        <label> Aleatoriu </label>
+                        <label> Ieftine </label>
+                        <label> Scumpe </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2  mb-5">
+                <button class="btn btn-custom mt-4" style="margin-left: -15px" id="sortButton" > Sorteaza </button>
+            </div>
+        </div>
 </div>
+
+<script>
+
+    sortButton.addEventListener("click", () => 
+    {
+        var button = document.getElementById("sortDropdownButton");
+
+        var url = window.location.href;
+        
+        var param2 = "sortMethod=";
+        if ( button.innerHTML.includes("Ieftin") )
+            param2 = param2 + "price_asc"  
+        if ( button.innerHTML.includes("Scump") )
+            param2= param2 + "price_desc"
+        if ( button.innerHTML.includes("Aleatoriu") )
+            param2 = param2 + "random"
+
+        if ( url.includes("sortMethod=random") )
+        {
+            url = url.replace("sortMethod=random", param2);
+        }
+        else if ( url.includes("sortMethod=price_asc") )
+        {
+            url = url.replace("sortMethod=price_asc", param2);
+        }
+        else if ( url.includes("sortMethod=price_desc") )
+        {
+            url = url.replace("sortMethod=price_desc", param2);
+        }
+
+        else
+            url += "&" + param2;
+
+        location.href = url;
+    })
+
+    document.addEventListener("click", e => 
+    {
+        const isSortDropdownButton = e.target.matches("[data-sort-dropdown-button]") 
+        if ( isSortDropdownButton )
+        {
+            e.target.closest("[data-sort-dropdown]").classList.toggle("active");
+        }
+        
+        const isDropdownOption = e.target.matches(".sort-dropdown-menu label")
+        if ( isDropdownOption )
+        {    
+            var clickedLabel = e.target.closest("label");
+            var dropDownButton = document.getElementById("sortDropdownButton")
+            dropDownButton.innerHTML = clickedLabel.innerText;
+        }
+
+        if ( !isSortDropdownButton )
+        {
+            document.querySelectorAll("[data-sort-dropdown].active").forEach( dropdown => 
+            {
+                dropdown.classList.remove("active");
+            })
+        }
+
+
+    })
+
+
+</script>
+
+<style>
+    .sort-dropdown
+    {
+        position: relative;
+    }
+
+    .sort-dropdown button
+    {
+
+        width: 100%;
+        text-align: start;
+        padding: .375rem 0 .375rem .75rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        background-color: white;
+        color: black;
+        border-radius: .25rem;
+    }
+
+    .sort-dropdown-menu label
+    {
+        display: block;
+        font-size: 1rem;
+        padding: .375rem 0 .375rem .75rem;
+    }
+
+    .sort-dropdown-menu label:hover
+    {
+        background-color: #002f34;
+        color: white;
+    }
+
+    .sort-dropdown-menu
+    {
+        position: absolute;
+        left: 0;
+        top: calc(100%);
+        background-color: white;
+        border: 1px solid #ced4da;
+        border-radius: .5rem;
+        opacity: 0;
+        z-index: 9;
+        width: 100%;
+        transform: translateY(-10%);
+        transition: all .125s linear;
+        pointer-events: none;
+    }
+
+    .sort-dropdown.active > button + .sort-dropdown-menu
+    {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+
+</style>
 
 <div class="container-fluid mt-2" style="background-color: #f2f4f5;">
     <div class="container g-1" style="background-color: #f2f4f5;">
@@ -78,7 +217,6 @@
                             <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
                                 <div class="ratio ratio-4x3">
                                     <img class="card-img-top px-3 pt-3" src="" data-id="@anunt.Id">
-                                    <!-- To do -->
                                 </div>
                             </a>
                             
@@ -170,7 +308,6 @@
                 dropdown.classList.remove("active")
             })
         }
-        
 
         var dropDownButton = $("#countyDropdownButton")
         var countyDropdown = $("#countyDropDown")
@@ -211,6 +348,18 @@
                 $("#categoryTextBox").val(category);
             if ( county != "" )
                 dropDownButton.val(county);
+
+            var url = window.location.search;
+            var urlParams = new URLSearchParams(url);
+
+            var sortMethod = "Aleatoriu"
+            if ( urlParams.get("sortMethod") == "price_asc") 
+                sortMethod = "Ieftine"
+                
+            if ( urlParams.get("sortMethod") == "price_desc" )
+                sortMethod = "Scumpe"
+            
+            document.getElementById("sortDropdownButton").innerHTML = sortMethod;
         }
 
         document.addEventListener("click", (e) => 

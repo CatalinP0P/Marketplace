@@ -83,7 +83,7 @@ body {
   display: block;
 }
 
-.background
+    .background
     {
         background-color: #f2f4f5;
         border-width: 0px;
@@ -92,7 +92,12 @@ body {
     .btn-custom
     {
         background-color:#002f34;
-        float: right;
+    }
+
+    .btn-custom:hover
+    {
+      background-color: white;
+      color:#002f34
     }
 
     .description
