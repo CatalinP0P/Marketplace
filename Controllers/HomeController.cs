@@ -69,7 +69,12 @@ public class HomeController : Controller
         var viewModel = new FormViewModel();
         viewModel.Anunt = anunt;
         viewModel.Counties = new List<string>();
-        viewModel.Categories = _context.Categories.ToList();
+        viewModel.Categories = new List<string>();
+        
+        foreach ( var category in _context.Categories.ToList() ) 
+            if ( category.Name != null )
+                viewModel.Categories.Add(category.Name);
+
 
         List<County> Counties = await _locationService.GetCounties();
         foreach (var county in Counties)
@@ -100,7 +105,11 @@ public class HomeController : Controller
         var viewModel = new FormViewModel();
         viewModel.Anunt = anuntInDb;
         viewModel.Counties = new List<string>();
-        viewModel.Categories = _context.Categories.ToList();
+        
+        viewModel.Categories = new List<string>();
+        foreach ( var category in _context.Categories.ToList() ) 
+            if ( category.Name != null )
+                viewModel.Categories.Add(category.Name);
 
         List<County> Counties = await _locationService.GetCounties();
         foreach (var county in Counties)
@@ -129,8 +138,12 @@ public class HomeController : Controller
         {
             var viewModel = new FormViewModel();
             viewModel.Anunt = anunt;
+            
             viewModel.Counties = new List<string>();
-            viewModel.Categories = _context.Categories.ToList();
+            viewModel.Categories = new List<string>();
+            foreach ( var category in _context.Categories.ToList() ) 
+            if ( category.Name != null )
+                viewModel.Categories.Add(category.Name);
 
             List<County> Counties = await _locationService.GetCounties();
             foreach (var county in Counties)

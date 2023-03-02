@@ -11,6 +11,6 @@ namespace Marketplace.ViewModels
         public Anunt? Anunt { get; set; }
         public List<string>? Counties { get; set; }
         public List<string>? Cities { get; set; }
-        public List<Categorie>? Categories { get; set; }
+        public List<string>? Categories { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Marketplace.Models
 
         [Required(ErrorMessage = "Camp obligatoriu")]
         [MinLength(60, ErrorMessage = "Descrierea trebuie sa contina minim 60 caractere")]
-        [MaxLength(600, ErrorMessage = "Descrierea trebuie sa contina maxim 600 caractere")]
+        [MaxLength(2000, ErrorMessage = "Descrierea trebuie sa contina maxim 2000 caractere")]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Camp obligatoriu")]

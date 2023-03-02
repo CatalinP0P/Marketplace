@@ -3,8 +3,6 @@
 <div class="container g-3">
     @using (@Html.BeginForm("Save", "Home", FormMethod.Post, new { @enctype="multipart/form-data"}))
     {
-        @Html.ValidationSummary()
-
         <h2 class="ms-2 mt-3"> Publica un anunt </h2>
         <div class="card bg-white mt-2 border-0 border-round">
             <div class="mx-3 my-3" >
@@ -17,7 +15,7 @@
                 
                 <label class="mt-2"> Categorie </label>
                 <div class="col-12 col-md-4">
-                    @Html.DropDownListFor(m=>m.Anunt.Category, new SelectList(new List<string>()), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
+                    @Html.DropDownListFor(m=>m.Anunt.Category, new SelectList(@Model.Categories), "Categorie", new { @class = "form-control background", @Id = "categorieDropDown" })
                     @Html.ValidationMessageFor( m=>m.Anunt.Category )
                 </div>
             </div>
@@ -29,7 +27,6 @@
                 <input type="file" name="file" id="imageInput" onchange="photoChanged()">
                 <img class="imagePreview" style="width: 300px; height: 300px" src="" id="imagePreview" >   
                 <!-- To do... -->
-            
             </div>
         </div>
 
@@ -121,41 +118,39 @@
 
         $(document).ready( function()
         {
-            var countyDropDown = $("#countyDropDown");
+            var countyDropDown = document.getElementById("countyDropDown")
             var cityDropDown = $("#cityDropDown");
-            var categorieDropDown = $("#categorieDropDown");
+            var categorieDropDown = document.getElementById("categorieDropDown");
             cityDropDown.empty();
 
-            $.get("/api/categories", function(data)
+            var categoriesCount = @Html.Raw(Json.Serialize(@Model.Categories.Count()));
+
+
+            // Getting the categories from the api 
+            @* $.get("/api/categories", function(data)
             {
                 $.each(data, function(index)
                 {
                     categorieDropDown.append("<option>" + data[index] + "</option>");
                 })
-            });
-            countyDropDown.change( function()
+            }); *@
+            
+            var anuntCategory = @Html.Raw(Json.Serialize(@Model.Anunt.Category))
+            console.log(anuntCategory)
+            for ( var i=1; i<=categoriesCount; i++ )
             {
-                var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropDown.val();
-                $.get(url1, function(data)
-                {
-                    var auto = String(data);
-
-                    cityDropDown.empty();
-                    var url = "http://localhost:5064/api/location/cities/" + auto;
-                    $.get(url, function(data)
-                    {
-                        $.each(data, function(city)
-                        {
-                            cityDropDown.append("<option> " + data[city] + " </option>")
-                        })
-                    })
-                })
-            })
+                if ( categorieDropDown.options[i] == anuntCategory )
+                    categorieDropDown.selectedIndex = i;
+            }
 
             <!-- Reloading the Category,county and city -->
+
+            var anuntCity;
             var paramValues = window.location.search;
             var params = new URLSearchParams(paramValues);
             var id = params.get("id");
+
+            var jsCityDropdown = document.getElementById("cityDropDown");
 
             if ( id != null )
             {
@@ -168,12 +163,70 @@
                 {
                     var JsonData = JSON.parse(request.response)
                     imagePreview.src = 'data:image/png;base64,' + JsonData.image
-                    categorieDropDown.val(JsonData.category)
-                    countyDropDown.val(JsonData.county)
+                    $("#countyDropDown").val(JsonData.county)
                 }
             }
+            loadCities();
+
+            
+            
+            function loadCities()
+            {
+                var anuntCity = @Html.Raw(Json.Serialize(@Model.Anunt.City))
+                console.log(anuntCity)
+                var url1 = "http://localhost:5064/api/location/GetAuto/" + $("#countyDropDown").val();
+                $.get(url1, function(data)
+                {
+                    var auto = String(data);
+
+                    cityDropDown.empty();
+                    var url = "http://localhost:5064/api/location/cities/" + auto;
+                    $.get(url, function(data)
+                    {
+                        $.each(data, function(city)
+                        {
+                            cityDropDown.append("<option> " + data[city] + " </option>")
+                            if ( data[city] == anuntCity )
+                                document.getElementById("cityDropDown").selectedIndex = city;
+                        })
+                    })
+                })
+            }
+
+
+            $("#countyDropDown").change( function()
+            {
+                loadCities();
+            })
+
+            <!-- Reloading the Category,county and city -->
+            var paramValues = window.location.search;
+            var params = new URLSearchParams(paramValues);
+            var id = params.get("id");
+
+            var jsCityDropdown = document.getElementById("cityDropDown");
+
+            if ( id != null )
+            {
+                document.getElementById("formButton").innerText = "Salveaza"
+
+                const request = new XMLHttpRequest();
+                request.open("GET", "/api/anunt/" + id);
+                request.send();
+                request.onload = () => 
+                {
+                    var JsonData = JSON.parse(request.response)
+                    imagePreview.src = 'data:image/png;base64,' + JsonData.image
+                    $("#countyDropDown").val(JsonData.county)
+                    var anuntCity = JsonData.city;
+                    loadCities();
+                    console.log(JsonData.city)
+
+                }
+            } 
+
         });
-        
-        
-    </script>
+
+
+   </script>
 }
