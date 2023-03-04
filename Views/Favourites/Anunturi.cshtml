@@ -1,0 +1,122 @@
+@model List<Anunt>;
+
+<div class="container-fluid" style="background-color: white; padding-top: 50px;">
+    <h1 class="text-center" > Anunturile tale favorite </h1>
+
+    <div class="container" style="padding-top: 60px; align-items: center; text-align: center;" >
+        <label class="option selected" > Anunturile favorite </label>
+        
+        <a asp-action="Searches" asp-controller="Favourites" >
+            <label class="option" > Cautari salvate </label>
+        </a>
+    </div>
+</div>
+
+<style>
+    .option
+    {   
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    .option.selected
+    {
+        color: black;
+        border-bottom: 2px solid black;
+    }
+</style>
+
+@foreach (var anunt in Model)
+{
+    <div class="row mt-2 mx-4" id="@anunt.Id" data-anunt-div > 
+            <div class="card my-2 anuntCard" style="position: relative;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <a asp-action="Index" asp-controller="Oferta" asp-route-id="@anunt.Id">
+                            <div class="ratio ratio-4x3">   
+                                    <img class="card-img-top py-3" src="" data-id="@anunt.Id">
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-sm-12 col-md-5">
+                        <label class="anunt-title">@anunt.Title</label>
+                        <label class="anunt-date">@anunt.Date.ToShortDateString()</label>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="text-align-end">
+                            <div class="col">
+                                <label class="anunt-price pb-5" >@anunt.Price Lei</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="favourite-button" id="favourite-button" data-anunt-id="@anunt.Id" style="width: 60px; height: 60px" >
+                        <svg viewBox="0 0 24 24" fill="none" style="width: 100%; height: 100%" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.8824 12.9557L10.5021 19.3071C11.2981 20.2067 12.7019 20.2067 13.4979 19.3071L19.1176 12.9557C20.7905 11.0649 21.6596 8.6871 20.4027 6.41967C18.9505 3.79992 16.2895 3.26448 13.9771 5.02375C13.182 5.62861 12.5294 6.31934 12.2107 6.67771C12.1 6.80224 11.9 6.80224 11.7893 6.67771C11.4706 6.31934 10.818 5.62861 10.0229 5.02375C7.71053 3.26448 5.04945 3.79992 3.59728 6.41967C2.3404 8.6871 3.20947 11.0649 4.8824 12.9557Z" stroke="#323232" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+}
+
+<script>
+    // Showing the pictures
+    @foreach (var anunt in Model)
+    {
+        <text>
+            var id = @Html.Raw(Json.Serialize(@anunt.Id))
+            var image = @Html.Raw(Json.Serialize(@anunt.Image))
+
+            var parameter = '[data-id="' + id + '"]'
+            var img = document.querySelector(parameter)
+            img.src = "data:image/png;base64," + image
+        </text>
+    }
+
+    window.addEventListener("load", () =>
+    {
+        document.querySelectorAll("#favourite-button").forEach( item => 
+        {
+            var id = item.getAttribute("data-anunt-id")
+            var request = new XMLHttpRequest();
+            request.open("GET", "/api/anunt/checkFavourite/" + id)
+            request.send();
+            request.onload = () => 
+            {
+                if ( request.response == "true" )
+                {
+                    item.classList.add("active");
+                }
+                
+            }
+        })
+    })
+
+    document.addEventListener("click", e => 
+    {
+        const isFavouriteButton = e.target.matches("#favourite-button")
+        if ( isFavouriteButton )
+        {
+            var clickedButton = e.target.closest("#favourite-button");
+            var anuntId = clickedButton.getAttribute("data-anunt-id")
+
+            var request = new XMLHttpRequest();
+            request.open("DELETE", "/api/anunt/RemoveFromFavourites/" + anuntId)
+            request.send();
+            request.onload = () =>
+            {
+                console.log(request.status)
+                console.log(request.response)
+
+            }
+
+            var div = e.target.closest("[data-anunt-div]")
+            div.remove();
+        }
+    })
+</script>

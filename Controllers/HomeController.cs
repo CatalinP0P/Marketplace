@@ -31,28 +31,6 @@ public class HomeController : Controller
         _locationService = locationService;
     }
 
-    // public IActionResult Index(string category = "")
-    // {
-    //     var viewModel = new HomeIndexViewModel();
-    //     viewModel.Categories = _context.Categories.ToList();
-
-    //     if (category == "")
-    //     {
-    //         viewModel.Anunturi = _context.Anunturi.ToList();
-    //     }
-    //     else
-    //     {
-    //         viewModel.Anunturi = new List<Anunt>();
-    //         foreach (var anunt in _context.Anunturi.ToList())
-    //         {
-    //             if (anunt.Category == category)
-    //                 viewModel.Anunturi.Add(anunt);
-    //         }
-    //     }
-
-    //     return View("Index", viewModel);
-    // }
-
     public IActionResult Index()
     {
         var list = _context.Anunturi.ToList();
@@ -69,29 +47,7 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    public IActionResult Favourites()
-    {
-        var userId = "notfound";
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-        if (claims != null)
-        {
-            userId = claims.Value;
-        }
-
-        var list = new List<Anunt>();
-        foreach ( var anuntFav in _context.Favourites.Where(m=>m.UserId == userId) )
-        {
-            var anunt = _context.Anunturi.FirstOrDefault(m=>m.Id == anuntFav.AnuntId);
-            if ( anunt != null )
-                list.Add(anunt);
-        }
-
-        list.Reverse();
-
-        return View("Favourites", list);
-
-    }
+    
 
     [Authorize]
     public async Task<IActionResult> New()

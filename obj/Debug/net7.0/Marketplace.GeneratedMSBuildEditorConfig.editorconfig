@@ -24,8 +24,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRXJyb3IvRXJyb3I0MDQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/catalinpop/Projects/Marketplace/Views/Home/Favourites.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9GYXZvdXJpdGVzLmNzaHRtbA==
+[/Users/catalinpop/Projects/Marketplace/Views/Favourites/Anunturi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmF2b3VyaXRlcy9BbnVudHVyaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/catalinpop/Projects/Marketplace/Views/Favourites/Searches.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmF2b3VyaXRlcy9TZWFyY2hlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/catalinpop/Projects/Marketplace/Views/Home/Form.cshtml]

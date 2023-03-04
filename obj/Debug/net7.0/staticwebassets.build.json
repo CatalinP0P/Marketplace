@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "M9gXkS/5h3Zqwt18K1dsyEUSrn4cmcLYfTPuR5LhApk=",
+  "Hash": "MUdLozx8NzwbeLbfj1wUN3KVRc8FKE/nt50JA12z0r8=",
   "Source": "Marketplace",
   "BasePath": "_content/Marketplace",
   "Mode": "Default",
@@ -1069,6 +1069,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/catalinpop/Projects/Marketplace/obj/Debug/net7.0/scopedcss/projectbundle/Marketplace.bundle.scp.css"
+    },
+    {
+      "Identity": "/Users/catalinpop/Projects/Marketplace/wwwroot/cart.ico",
+      "SourceId": "Marketplace",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/catalinpop/Projects/Marketplace/wwwroot/",
+      "BasePath": "_content/Marketplace",
+      "RelativePath": "cart.ico",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/cart.ico"
     },
     {
       "Identity": "/Users/catalinpop/Projects/Marketplace/wwwroot/css/site.css",

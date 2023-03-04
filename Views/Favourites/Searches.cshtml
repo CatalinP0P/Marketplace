@@ -1,0 +1,28 @@
+<div class="container-fluid" style="background-color: white; padding-top: 50px;">
+    <h1 class="text-center" > Cautari salvate </h1>
+
+    <div class="container" style="padding-top: 60px; align-items: center; text-align: center;" >
+        <a asp-action="Anunturi" asp-controller="Favourites" >
+            <label class="option" > Anunturile favorite </label>
+        </a>
+        
+        <label class="option selected" > Cautari salvate </label>
+    </div>
+</div>
+
+<style>
+    .option
+    {   
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .option.selected
+    {
+        color: black;
+        text-decoration: none;
+        border-bottom: 2px solid black;
+    }
+</style>

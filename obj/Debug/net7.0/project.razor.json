@@ -18680,6 +18680,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Favourites/Searches.cshtml",
+      "TargetPath": "Views\\Favourites\\Searches.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Shared/editDotsPartial.cshtml",
       "TargetPath": "Views\\Shared\\editDotsPartial.cshtml",
       "FileKind": "mvc"
@@ -18692,6 +18697,11 @@
     {
       "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Error/Error404.cshtml",
       "TargetPath": "Views\\Error\\Error404.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Favourites/Anunturi.cshtml",
+      "TargetPath": "Views\\Favourites\\Anunturi.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -18717,11 +18727,6 @@
     {
       "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Shared/_heart-fill.cshtml",
       "TargetPath": "Views\\Shared\\_heart-fill.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/Users/catalinpop/Projects/Marketplace/Views/Home/Favourites.cshtml",
-      "TargetPath": "Views\\Home\\Favourites.cshtml",
       "FileKind": "mvc"
     },
     {

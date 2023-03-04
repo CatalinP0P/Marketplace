@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/Marketplace.bundle.scp.css"
     },
     {
+      "Id": "/Users/catalinpop/Projects/Marketplace/wwwroot/cart.ico",
+      "PackagePath": "staticwebassets/cart.ico"
+    },
+    {
       "Id": "/Users/catalinpop/Projects/Marketplace/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
