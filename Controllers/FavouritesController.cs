@@ -46,7 +46,18 @@ namespace Marketplace.Controllers
 
         public IActionResult Searches()
         {
-            return View();
+            var _userId = "not found";
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claims != null)
+            {
+                _userId = claims.Value;
+            }
+
+            var list = _context.CautariFavorite.Where(m=>m.userId == _userId);
+            list.Reverse();
+
+            return View("Searches", list.ToList());
         }
     }
 }

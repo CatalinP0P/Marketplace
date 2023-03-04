@@ -87,6 +87,38 @@ namespace Marketplace.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Marketplace.Models.Cautare", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("County")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("maxPrice")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("minPrice")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CautariFavorite");
+                });
+
             modelBuilder.Entity("Marketplace.Models.FavouriteItem", b =>
                 {
                     b.Property<int>("Id")

@@ -116,87 +116,6 @@
         </div>
 </div>
 
-<script>
-
-    sortButton.addEventListener("click", () => 
-    {
-        var button = document.getElementById("sortDropdownButton");
-
-        var url = window.location.href;
-        
-        var param2 = "sortMethod=";
-        if ( button.innerHTML.includes("Ieftin") )
-            param2 = param2 + "price_asc"  
-        if ( button.innerHTML.includes("Scump") )
-            param2= param2 + "price_desc"
-        if ( button.innerHTML.includes("Aleatoriu") )
-            param2 = param2 + "random"
-
-        if ( url.includes("sortMethod=random") )
-        {
-            url = url.replace("sortMethod=random", param2);
-        }
-        else if ( url.includes("sortMethod=price_asc") )
-        {
-            url = url.replace("sortMethod=price_asc", param2);
-        }
-        else if ( url.includes("sortMethod=price_desc") )
-        {
-            url = url.replace("sortMethod=price_desc", param2);
-        }
-
-        else
-            url += "&" + param2;
-
-        location.href = url;
-    })
-
-    document.addEventListener("click", e => 
-    {
-        const isSaveSearchButton = e.target.matches(".save-button-search");
-        if ( isSaveSearchButton )
-        {
-            var text = document.getElementById("searchBox").value;
-            var category = document.getElementById("categoryTextBox").value;
-            var minPrice = document.getElementById("minPriceTextBox").value;
-            var maxPrice = document.getElementById("maxPriceTextBox").value;
-            
-            // to do 
-            // call the api to save this search
-
-            var button = e.target.closest(".save-button-search");
-            button.classList.toggle("active");
-        }
-
-
-        const isSortDropdownButton = e.target.matches("[data-sort-dropdown-button]") 
-        if ( isSortDropdownButton )
-        {
-            e.target.closest("[data-sort-dropdown]").classList.toggle("active");
-        }
-        
-        const isDropdownOption = e.target.matches(".sort-dropdown-menu label")
-        if ( isDropdownOption )
-        {    
-            var clickedLabel = e.target.closest("label");
-            var dropDownButton = document.getElementById("sortDropdownButton")
-            dropDownButton.innerHTML = clickedLabel.innerText;
-        }
-
-        if ( !isSortDropdownButton )
-        {
-            document.querySelectorAll("[data-sort-dropdown].active").forEach( dropdown => 
-            {
-                dropdown.classList.remove("active");
-            })
-        }
-
-
-    })
-
-
-</script>
-
 <style>
     .sort-dropdown
     {
@@ -380,51 +299,6 @@
 }
 </style>
 
-<script>
-    
-    window.addEventListener("load", ()=>
-    {
-        document.querySelectorAll("#favourite-button").forEach( item => 
-        {
-            var id = item.getAttribute("data-anunt-id")
-            var request = new XMLHttpRequest();
-            request.open("GET", "/api/anunt/checkFavourite/" + id)
-            request.send();
-            request.onload = () => 
-            {
-                if ( request.response == "true" )
-                {
-                    item.classList.add("active");
-                }
-                
-            }
-        })
-    })
-
-
-    document.addEventListener("click", e => 
-    {
-        if ( e.target.matches("#favourite-button") )
-        {
-            var div = e.target.closest("#favourite-button")
-            var id = div.getAttribute("data-anunt-id")
-            var request = new XMLHttpRequest();
-
-            if ( !div.classList.contains("active") )  
-            {
-                request.open("POST", "/api/anunt/AddToFavourites/" + id)
-                request.send();
-            }
-            else
-            {
-                request.open("DELETE", "/api/anunt/RemoveFromFavourites/" + id)
-                request.send();
-            }
-
-            div.classList.toggle("active");
-        }
-    })
-</script>
 
 
 @section Scripts
@@ -456,14 +330,49 @@
 
         function loadFilters()
         {
-            var url = "http://localhost:5064/api/location/counties";
+            var url = window.location.search;
+            var urlParams = new URLSearchParams(url);
+
+
+            var url = "/api/location/counties";
             $.get(url, function(data)
             {
                 $.each(data, function(index)
                 {
                     countyDropdown.append("<option>"+ data[index] +"</option>");
+                    if ( data[index] == urlParams.get("county") )
+                    {
+                        document.getElementById("countyDropDown").selectedIndex = index + 1;
+                    }
                 })
             })
+
+            var url1 = "/api/location/GetAuto/" + urlParams.get("county");                
+            $.get(url1, function(data)
+            {
+                var auto = String(data);
+                var url = "/api/location/cities/" + auto;
+                $.get(url, function(data)
+                {
+                    $.each(data, function(index)
+                    {
+                        cityDropDown.append("<option>" + data[index] + "</option>")
+                        if ( data[index] == urlParams.get("city") )
+                            document.getElementById("cityDropDown").selectedIndex = index + 1;
+                    })
+                }) 
+            });
+            
+            if ( urlParams.get("county") != null && urlParams.get("county") != "" )
+            {
+                dropDownButton.text(urlParams.get("county"));
+                if ( urlParams.get("city") != null && urlParams.get("city") != "" )
+                    dropDownButton.text(dropDownButton.text() + ", " + urlParams.get("city"))
+            }
+            else
+            {
+                dropDownButton.text("Toata Romania");
+            }
             
             
             <!-- Filters -->
@@ -483,9 +392,7 @@
                 $("#categoryTextBox").val(category);
             if ( county != "" )
                 dropDownButton.val(county);
-
-            var url = window.location.search;
-            var urlParams = new URLSearchParams(url);
+            
 
             var sortMethod = "Aleatoriu"
             if ( urlParams.get("sortMethod") == "price_asc") 
@@ -497,8 +404,147 @@
             document.getElementById("sortDropdownButton").innerHTML = sortMethod;          
         }
 
-        document.addEventListener("click", (e) => 
+
+        @foreach (var anunt in Model.Anunturi)
         {
+            <text>
+                var id = @Html.Raw(Json.Serialize(@anunt.Id))
+                var image = @Html.Raw(Json.Serialize(@anunt.Image))
+
+                var parameter = '[data-id="' + id + '"]'
+                var img = document.querySelector(parameter)
+                img.src = "data:image/png;base64," + image
+
+            </text>
+        }
+
+
+
+        var model = @Html.Raw(Json.Serialize(Model));
+
+        window.addEventListener("load", () => 
+        {
+            document.querySelectorAll("#favourite-button").forEach( item => 
+            {
+                var id = item.getAttribute("data-anunt-id")
+                var request = new XMLHttpRequest();
+                request.open("GET", "/api/anunt/checkFavourite/" + id)
+                request.send();
+                request.onload = () => 
+                {
+                    if ( request.response == "true" )
+                    {
+                        item.classList.add("active");
+                    }
+                    
+                }
+            })
+
+            loadFilters();
+            if ( !location.href.includes("pageIndex") )
+                location.href += "&pageIndex=1"
+            
+            if ( currentPageIndex == 1 )
+            {
+                document.getElementById("prevPage").classList.add("hidden")
+            }
+            if ( currentPageIndex >= pageCount )
+            {
+                document.getElementById("nextPage").classList.add("hidden")
+            }
+
+            console.log("Fully loaded")
+        })
+
+
+        document.addEventListener("click", e => 
+        { 
+            const isSaveSearchButton = e.target.matches(".save-button-search");
+            if ( isSaveSearchButton )
+            {
+                var url = window.location.search;
+                var urlParams = new URLSearchParams(url);
+
+                var text = document.getElementById("searchBox").value;
+                var category = document.getElementById("categoryTextBox").value;
+                var minPrice = document.getElementById("minPriceTextBox").value;
+                var maxPrice = document.getElementById("maxPriceTextBox").value;
+                var county = $("#countyDropDown").val();
+                var city = $("#cityDropDown").val();
+                
+                console.log(text)
+                console.log(county + " ,  " + city)
+                console.log(category)
+                console.log(minPrice + "   "  + maxPrice);
+
+                var url = "/api/search/add?text=" + text;
+                if ( category != null )
+                    url += "&categorie=" + category;
+                if ( county != null )
+                    url += "&county=" + county;
+                if ( city != null )
+                    url += "&city=" + city;
+                if ( minPrice != null )
+                    url += "&minPrice=" + minPrice;
+                if ( maxPrice != null )
+                    url += "&maxPrice=" + maxPrice;
+
+                var request = new XMLHttpRequest();
+                request.open("POST", url);
+                request.send();
+                request.onload = () => 
+                {
+                    console.log("Added to favourites");
+                }
+                
+
+                var button = e.target.closest(".save-button-search");
+                button.classList.toggle("active");
+            }
+
+
+            const isSortDropdownButton = e.target.matches("[data-sort-dropdown-button]") 
+            if ( isSortDropdownButton )
+            {
+                e.target.closest("[data-sort-dropdown]").classList.toggle("active");
+            }
+            
+            const isDropdownOption = e.target.matches(".sort-dropdown-menu label")
+            if ( isDropdownOption )
+            {    
+                var clickedLabel = e.target.closest("label");
+                var dropDownButton = document.getElementById("sortDropdownButton")
+                dropDownButton.innerHTML = clickedLabel.innerText;
+            }
+
+            if ( !isSortDropdownButton )
+            {
+                document.querySelectorAll("[data-sort-dropdown].active").forEach( dropdown => 
+                {
+                    dropdown.classList.remove("active");
+                })
+            }
+
+            if ( e.target.matches("#favourite-button") )
+            {
+                var div = e.target.closest("#favourite-button")
+                var id = div.getAttribute("data-anunt-id")
+                var request = new XMLHttpRequest();
+
+                if ( !div.classList.contains("active") )  
+                {
+                    request.open("POST", "/api/anunt/AddToFavourites/" + id)
+                    request.send();
+                }
+                else
+                {
+                    request.open("DELETE", "/api/anunt/RemoveFromFavourites/" + id)
+                    request.send();
+                }
+
+                div.classList.toggle("active");
+            }
+
             if ( e.target.matches("#pageButton") )
             {
                 var clickedButton = e.target.closest("#pageButton")
@@ -525,45 +571,6 @@
                 location.href = location.href.replace(param1, param2);
             }
 
-        })
-
-        window.addEventListener("load", () => 
-        {
-            loadFilters();
-            if ( !location.href.includes("pageIndex") )
-                location.href += "&pageIndex=1"
-            
-            if ( currentPageIndex == 1 )
-            {
-                document.getElementById("prevPage").classList.add("hidden")
-            }
-            if ( currentPageIndex >= pageCount )
-            {
-                document.getElementById("nextPage").classList.add("hidden")
-            }
-
-            console.log("Fully loaded")
-        })
-
-        @foreach (var anunt in Model.Anunturi)
-        {
-            <text>
-                var id = @Html.Raw(Json.Serialize(@anunt.Id))
-                var image = @Html.Raw(Json.Serialize(@anunt.Image))
-
-                var parameter = '[data-id="' + id + '"]'
-                var img = document.querySelector(parameter)
-                img.src = "data:image/png;base64," + image
-
-            </text>
-        }
-
-
-
-        var model = @Html.Raw(Json.Serialize(Model));
-
-        document.addEventListener("click", e => 
-        { 
             const isDropDownButton = e.target.matches("[data-dropdown-button]")
             if ( !isDropDownButton && e.target.closest("[data-dropdown]") != null ) return;
 
@@ -581,83 +588,112 @@
             })
         })
 
+        sortButton.addEventListener("click", () => 
+        {
+            var button = document.getElementById("sortDropdownButton");
 
-        
-        filterButton.on("click", function()
+            var url = window.location.href;
+            
+            var param2 = "sortMethod=";
+            if ( button.innerHTML.includes("Ieftin") )
+                param2 = param2 + "price_asc"  
+            if ( button.innerHTML.includes("Scump") )
+                param2= param2 + "price_desc"
+            if ( button.innerHTML.includes("Aleatoriu") )
+                param2 = param2 + "random"
+
+            if ( url.includes("sortMethod=random") )
             {
-                var category =  $("#categoryTextBox").val();
-                var minPrice = $("#minPriceTextBox").val();
-                var maxPrice = $("#maxPriceTextBox").val();
-                
-                var url = "/Oferte/index";
+                url = url.replace("sortMethod=random", param2);
+            }
+            else if ( url.includes("sortMethod=price_asc") )
+            {
+                url = url.replace("sortMethod=price_asc", param2);
+            }
+            else if ( url.includes("sortMethod=price_desc") )
+            {
+                url = url.replace("sortMethod=price_desc", param2);
+            }
 
-                if ( category != "" )
-                {
-                    url = url + "?categorie=" + category;
-                }
-                else
-                {
-                    url += "?categorie= ";
-                }
-                if ( searchBox.val() != "" && searchBox.val() != null )
-                {
-                    url = url + "&q=" + searchBox.val();
-                }
-                if ( minPrice != "" )
-                {
-                    url =  url + "&minPrice=" + minPrice;
-                }
-                if ( maxPrice != "" )
-                {
-                    url = url + "&maxPrice=" + maxPrice;
-                }
+            else
+                url += "&" + param2;
+
+            location.href = url;
+        })
+
+        filterButton.on("click", function()
+        {
+            
+            var category =  $("#categoryTextBox").val();
+            var minPrice = $("#minPriceTextBox").val();
+            var maxPrice = $("#maxPriceTextBox").val();
+            
+            var url = "/Oferte/index";
+
+            if ( category != "" )
+            {
+                url = url + "?categorie=" + category;
+            }
+            else
+            {
+                url += "?categorie= ";
+            }
+            if ( searchBox.val() != "" && searchBox.val() != null )
+            {
+                url = url + "&q=" + searchBox.val();
+            }
+            if ( minPrice != "" )
+            {
+                url =  url + "&minPrice=" + minPrice;
+            }
+            if ( maxPrice != "" )
+            {
+                url = url + "&maxPrice=" + maxPrice;
+            }
+            if ( countyDropdown.val() != "Toata Romania" && countyDropdown.val() != "" )
+            {
+                url += "&county=" + countyDropdown.val();
+            }
+
+            location.href = url;
+        });  
+
+      
+        searchButton.on("click", function()
+        {
+            if ( searchBox.val() != "" || countyDropdown.val() != "Toata Romania" )
+            {
+                var url = "/Oferte/Index?q=" + searchBox.val();
                 if ( countyDropdown.val() != "Toata Romania" && countyDropdown.val() != "" )
                 {
                     url += "&county=" + countyDropdown.val();
                 }
-
-                location.href = url;
-            });  
-
-        $(document).ready(function()
-        {
-            
-            countyDropdown.on("change", function()
-            {
-                cityDropDown.empty();
-                cityDropDown.append("<option>"+ "Toate Localitatile" +"</option>");
-                var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropdown.val();                
-                $.get(url1, function(data)
+                if ( cityDropDown.val() != "Toate Localitatile" )
                 {
-                    var auto = String(data);
-                    var url = "http://localhost:5064/api/location/cities/" + auto;
-                    $.get(url, function(data)
-                    {
-                        $.each(data, function(index)
-                        {
-                            cityDropDown.append("<option>" + data[index] + "</option>")
-                        })
-                    }) 
-                });
-            })
-
-            searchButton.on("click", function()
-            {
-                if ( searchBox.val() != "" || countyDropdown.val() != "Toata Romania" )
-                {
-                    var url = "/Oferte/Index?q=" + searchBox.val();
-                    if ( countyDropdown.val() != "Toata Romania" && countyDropdown.val() != "" )
-                    {
-                        url += "&county=" + countyDropdown.val();
-                    }
-                    if ( cityDropDown.val() != "Toate Localitatile" )
-                    {
-                        url += "&city=" + cityDropDown.val();
-                    }
-                    location.href = url;
+                    url += "&city=" + cityDropDown.val();
                 }
-            });
+                location.href = url;
+            }
         });
+        
+        countyDropdown.on("change", function()
+        {
+            cityDropDown.empty();
+            cityDropDown.append("<option>"+ "Toate Localitatile" +"</option>");
+            var url1 = "http://localhost:5064/api/location/GetAuto/" + countyDropdown.val();                
+            $.get(url1, function(data)
+            {
+                var auto = String(data);
+                var url = "http://localhost:5064/api/location/cities/" + auto;
+                $.get(url, function(data)
+                {
+                    $.each(data, function(index)
+                    {
+                        cityDropDown.append("<option>" + data[index] + "</option>")
+                    })
+                }) 
+            });
+        })
 
     </script>
 }

@@ -1,3 +1,5 @@
+@model List<Cautare>;
+
 <div class="container-fluid" style="background-color: white; padding-top: 50px;">
     <h1 class="text-center" > Cautari salvate </h1>
 
@@ -9,6 +11,56 @@
         <label class="option selected" > Cautari salvate </label>
     </div>
 </div>
+
+<div class="container pt-2">
+    @if ( Model != null)
+    {
+        @foreach (var cautare in Model)
+        {
+            <div class="card my-3" style="background-color: white; padding: 20px 60px;"> 
+                <label class="cautare-text"> @cautare.Text </label>
+                @if ( @cautare.Category != "" && @cautare.Category != null )
+                {
+                    <label class="cautare-2"> Categorie:   @cautare.Category </label>
+                }   
+                @if ( @cautare.County != "" && @cautare.County != null )
+                {
+                    <label class="cautare-2"> Judet:   @cautare.County </label>
+                }    
+                @if ( @cautare.City != "" && @cautare.City != null )
+                {
+                    <label class="cautare-2"> Oras:   @cautare.City </label>
+                }
+                @if ( @cautare.minPrice != 0 && @cautare.minPrice != null )
+                {
+                    <label class="cautare-2"> Categorie:   @cautare.minPrice </label>
+                }
+                @if ( @cautare.maxPrice != 0 && @cautare.maxPrice != null )
+                {
+                    <label class="cautare-2"> Categorie:   @cautare.maxPrice </label>
+                }
+            </div>   
+        }
+    }
+</div>
+
+<style>
+    .cautare-text
+    {
+        display: block;
+        font-size: 20px;
+        font-weight: 500;
+        color: black;
+    }
+
+    .cautare-2
+    {
+        display: block;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.4);
+    }
+</style>
 
 <style>
     .option
