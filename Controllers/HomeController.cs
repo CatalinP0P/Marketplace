@@ -31,26 +31,66 @@ public class HomeController : Controller
         _locationService = locationService;
     }
 
-    public IActionResult Index(string category = "")
+    // public IActionResult Index(string category = "")
+    // {
+    //     var viewModel = new HomeIndexViewModel();
+    //     viewModel.Categories = _context.Categories.ToList();
+
+    //     if (category == "")
+    //     {
+    //         viewModel.Anunturi = _context.Anunturi.ToList();
+    //     }
+    //     else
+    //     {
+    //         viewModel.Anunturi = new List<Anunt>();
+    //         foreach (var anunt in _context.Anunturi.ToList())
+    //         {
+    //             if (anunt.Category == category)
+    //                 viewModel.Anunturi.Add(anunt);
+    //         }
+    //     }
+
+    //     return View("Index", viewModel);
+    // }
+
+    public IActionResult Index()
     {
-        var viewModel = new HomeIndexViewModel();
-        viewModel.Categories = _context.Categories.ToList();
-
-        if (category == "")
+        var list = _context.Anunturi.ToList();
+        list.Reverse();
+        if ( list.Count >= 20 )
+            list = list.GetRange(0,20);
+        
+        var viewModel = new HomeIndexViewModel()
         {
-            viewModel.Anunturi = _context.Anunturi.ToList();
-        }
-        else
+            Anunturi = list,
+            Categories = _context.Categories.ToList()
+        };
+        
+        return View(viewModel);
+    }
+
+    public IActionResult Favourites()
+    {
+        var userId = "notfound";
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+        if (claims != null)
         {
-            viewModel.Anunturi = new List<Anunt>();
-            foreach (var anunt in _context.Anunturi.ToList())
-            {
-                if (anunt.Category == category)
-                    viewModel.Anunturi.Add(anunt);
-            }
+            userId = claims.Value;
         }
 
-        return View("Index", viewModel);
+        var list = new List<Anunt>();
+        foreach ( var anuntFav in _context.Favourites.Where(m=>m.UserId == userId) )
+        {
+            var anunt = _context.Anunturi.FirstOrDefault(m=>m.Id == anuntFav.AnuntId);
+            if ( anunt != null )
+                list.Add(anunt);
+        }
+
+        list.Reverse();
+
+        return View("Favourites", list);
+
     }
 
     [Authorize]
