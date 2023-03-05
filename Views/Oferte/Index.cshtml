@@ -389,10 +389,26 @@
             if ( maxPrice != 1000000000 )
                 $("#maxPriceTextBox").val(maxPrice);
             if ( category != "" )
-                $("#categoryTextBox").val(category);
+                $("#categoryTextBox").val(urlParams.get("category"));
             if ( county != "" )
                 dropDownButton.val(county);
             
+            var dropdown = $("#categoryTextBox")
+            dropdown.empty();
+            dropdown.append("<option>" + "Orice Categorie" + "</option>")
+            var url = "/api/categories";
+            console.log(urlParams.get("categorie"))
+            $.get(url, data => 
+            {
+                $.each(data, function(index)
+                {
+                    dropdown.append("<option>" + data[index] + "</option>")
+                    if ( data[index] == urlParams.get("categorie") )
+                    {
+                        dropdown.prop("selectedIndex", index + 1)
+                    } 
+                })
+            })
 
             var sortMethod = "Aleatoriu"
             if ( urlParams.get("sortMethod") == "price_asc") 

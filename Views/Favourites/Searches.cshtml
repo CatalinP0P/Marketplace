@@ -4,7 +4,7 @@
     <h1 class="text-center" > Cautari salvate </h1>
 
     <div class="container" style="padding-top: 60px; align-items: center; text-align: center;" >
-        <a asp-action="Anunturi" asp-controller="Favourites" >
+        <a asp-action="Anunturi" asp-controller="Favourites">
             <label class="option" > Anunturile favorite </label>
         </a>
         
@@ -17,7 +17,7 @@
     {
         @foreach (var cautare in Model)
         {
-            <div class="card my-3" style="background-color: white; padding: 20px 60px;"> 
+            <div class="card my-3" style="background-color: white; padding: 20px 60px; position:relative" data-search-id="@cautare.Id" data-search> 
                 <label class="cautare-text"> @cautare.Text </label>
                 @if ( @cautare.Category != "" && @cautare.Category != null )
                 {
@@ -33,18 +33,138 @@
                 }
                 @if ( @cautare.minPrice != 0 && @cautare.minPrice != null )
                 {
-                    <label class="cautare-2"> Categorie:   @cautare.minPrice </label>
+                    <label class="cautare-2"> Pret Minim:   @cautare.minPrice </label>
                 }
                 @if ( @cautare.maxPrice != 0 && @cautare.maxPrice != null )
                 {
-                    <label class="cautare-2"> Categorie:   @cautare.maxPrice </label>
+                    <label class="cautare-2"> Pret Maxim:   @cautare.maxPrice </label>
                 }
+
+                <div class="closeButton" data-search-id="@cautare.Id">
+                    <label> Sterge cautare </label>
+                    <label class="symbol" >×</label>
+                </div>
+                
+                <style>
+                    
+                </style>
+
             </div>   
+
         }
     }
 </div>
 
+<script>
+    document.addEventListener("click", e => 
+    {
+        const isSearchDiv = e.target.matches("[data-search]")
+        if ( isSearchDiv )
+        {
+            var clickedDiv = e.target.closest("[data-search]")
+            var id = clickedDiv.getAttribute("data-search-id");
+
+            var request = new XMLHttpRequest();
+            request.open("GET", "/api/search/" + id)
+            request.send();
+            request.onload = () => 
+            {
+                var cautare = JSON.parse(request.response)
+                var cautareURL = "/Oferte/Index";
+                cautareURL += "?q=" + cautare.text;
+                if ( cautare.county != null && cautare.county != "" )
+                {
+                    cautareURL += "&county=" + cautare.county;
+                }
+                if ( cautare.city != null && cautare.city != "" ) 
+                {
+                    cautareURL += "&city=" + cautare.city
+                }
+                if ( cautare.category != null && cautare.category != "" )
+                {
+                    cautareURL += "&categorie=" + cautare.category
+                }
+                if ( cautare.minPrice != 0 && cautare.minPrice != null )
+                {
+                    cautareURL += "&minPrice=" + cautare.minPrice
+                }
+                if ( cautare.maxPrice != 1000000000 && cautare.maxPrice != null )
+                {
+                    cautareURL += "&maxPrice=" + cautare.maxPrice;
+                }
+                window.location.href = cautareURL;
+            }
+        }
+
+        const isCloseButton = e.target.matches(".closeButton")
+        if ( isCloseButton )
+        {
+            var clickedButton = e.target.closest(".closeButton");
+            document.querySelectorAll("[data-search]").forEach( card =>
+            {
+                if ( card.getAttribute("data-search-id") == clickedButton.getAttribute("data-search-id") )
+                {
+                    card.remove();
+
+                    // calling the api to remove from db aswell
+                    // to do.... 
+
+                    var request = new XMLHttpRequest()
+                    request.open("DELETE", "/api/search/remove/" + card.getAttribute("data-search-id"))
+                    request.send();
+                    request.onload = () => 
+                    {
+                        console.log("Removed successfully")
+                    }
+                }
+            })
+        }
+    })
+</script>
+
+
 <style>
+    [data-search]
+    {
+        cursor: pointer;
+    }
+
+    [data-search] > *
+    {
+        pointer-events: none;
+    }
+
+    .closeButton
+    {
+        position:absolute;
+        bottom: 0;
+        right: 0;
+        margin: 10px;
+        padding: 5px 20px;
+        font-size: 15px;
+        pointer-events: all;
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    .closeButton > *
+    {
+        pointer-events: none;
+    }
+
+    .closeButton:hover
+    {
+        color: black;
+    }
+
+    .symbol
+    {
+        font-size: 40px;
+        transform: translateY(+10%);
+        pointer-events: none;
+    }
+
+
     .cautare-text
     {
         display: block;
