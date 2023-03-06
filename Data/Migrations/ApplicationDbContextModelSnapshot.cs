@@ -70,6 +70,52 @@ namespace Marketplace.Data.Migrations
                     b.ToTable("Anunturi");
                 });
 
+            modelBuilder.Entity("Marketplace.Models.AutoProperties", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Caroserie")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EngineCc")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Fuel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Gearbox")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Hp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Km")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AutoProperties");
+                });
+
             modelBuilder.Entity("Marketplace.Models.Categorie", b =>
                 {
                     b.Property<int>("Id")

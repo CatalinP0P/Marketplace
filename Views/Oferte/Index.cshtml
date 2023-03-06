@@ -97,6 +97,153 @@
             <button class="btn btn-custom mt-4" id="filterButton" > Filtreaza </button>
         </div>
     </div>
+
+    <div class="hidden mt-3" id="autoPartial">
+
+        <div class="row g-2 mx-1">
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Marca </label>
+                <select  class="dropdown-filter" id="Marca" name="auto.manufacturer"> 
+                    <option> Vezi toate </option>
+                    <!-- to do... calling an external api with all the car manufacturer -->
+                </select>
+            </div>
+            
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Model </label>
+                <select  class="dropdown-filter" id="Model"> 
+                    <option> Vezi toate </option>
+                    <!-- to do... calling an external api with all car models of the manufacturer -->
+                </select>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Caroserie </label>
+                <select  class="dropdown-filter" id="Caroserie"> 
+                    <option> Vezi toate </option>
+                    <option> Sedan </option>
+                    <option> Break </option>
+                    <option> Hatchback </option>
+                    <option> SUV </option>
+                    <option> Pickup </option>
+                </select>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > An fabricatie </label>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="minYear" style="padding: .375rem .75rem" placeholder="De la" >
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="maxYear" style="padding: .375rem .75rem" placeholder="Pana la" >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 mx-1">
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Cutie </label>
+                <select  class="dropdown-filter" id="Cutie"> 
+                    <option> Vezi toate </option>
+                    <option> Manuala </option>
+                    <option> Automata </option>
+                </select>
+            </div>
+            
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Rulaj Km </label>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="minKm" style="padding: .375rem .75rem" placeholder="De la" >
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="maxKm" style="padding: .375rem .75rem" placeholder="Pana la" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+                <label class="label-filter" > Capacitate cilindrice </label>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="minCc" style="padding: .375rem .75rem" placeholder="De la" >
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="maxCc" style="padding: .375rem .75rem" placeholder="Pana la" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3" >
+                <label class="label-filter" > Putere </label>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="minHp" style="padding: .375rem .75rem" placeholder="De la" >
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="dropdown-filter" id="maxHp" style="padding: .375rem .75rem" placeholder="Pana la" >
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-2 mx-1" >
+            <div class="col-sm-6 col-md-3" >
+                <label class="label-filter"> Combustibil </label> 
+                <select  class="dropdown-filter" id="Combustibil"> 
+                    <option> Vezi toate </option> 
+                    <option> Motorina </option>
+                    <option> Benzina </option>
+                    <option> Benzina + GPL </option>
+                    <option> Hibrid </option>
+                    <option> Electric </option>
+                </select>
+            </div>
+        </div>
+
+
+        
+        <style>
+            .hidden
+            {
+                display: none;
+            }
+
+            .dropdown-filter
+            {
+                color: black;
+                background-color: white;
+                border: 1px solid #d7dce1;
+                font-size: 1rem;
+                padding: .45rem .55rem;
+                line-height: 1.5;
+                width: 100%;
+                border-radius: .25rem;
+                box-sizing: border-box;
+            }
+
+            .dropdown-filter ::-ms-expand
+            {
+                display: none;
+            }
+
+            .dropdown-filter option:first
+            {
+                color : #6d757e;
+            }
+
+            .label-filter
+            {
+                margin-top: .5rem;
+                display: block;
+                margin-left: 3px;
+            }
+        </style>
+    </div>
+
+
         <hr>
         <div class="row">
             <div class="col-4" style="margin-left: 5px;">
@@ -397,7 +544,6 @@
             dropdown.empty();
             dropdown.append("<option>" + "Orice Categorie" + "</option>")
             var url = "/api/categories";
-            console.log(urlParams.get("categorie"))
             $.get(url, data => 
             {
                 $.each(data, function(index)
@@ -438,8 +584,26 @@
 
         var model = @Html.Raw(Json.Serialize(Model));
 
+        function ChooseAppropriateCategoryFilters()
+        {
+            var url = window.location.search;
+            var urlParams = new URLSearchParams(url);
+            var category = urlParams.get("categorie");
+            if ( category == "Auto, moto" )
+            {
+                var autoPartial = document.getElementById("autoPartial");
+                autoPartial.classList.remove("hidden")
+            }
+        }
+
+
         window.addEventListener("load", () => 
         {
+            var x = window.location.search;
+            var urlParams = new URLSearchParams(x);
+
+            var autoPartial = document.getElementById("autoPartial");
+
             document.querySelectorAll("#favourite-button").forEach( item => 
             {
                 var id = item.getAttribute("data-anunt-id")
@@ -469,6 +633,7 @@
                 document.getElementById("nextPage").classList.add("hidden")
             }
 
+            ChooseAppropriateCategoryFilters();
             console.log("Fully loaded")
         })
 
@@ -701,13 +866,16 @@
             {
                 var auto = String(data);
                 var url = "http://localhost:5064/api/location/cities/" + auto;
-                $.get(url, function(data)
+                if ( auto != "notfound" )
                 {
-                    $.each(data, function(index)
+                    $.get(url, function(data)
                     {
-                        cityDropDown.append("<option>" + data[index] + "</option>")
-                    })
-                }) 
+                        $.each(data, function(index)
+                        {
+                            cityDropDown.append("<option>" + data[index] + "</option>")
+                        })
+                    }) 
+                }
             });
         })
 

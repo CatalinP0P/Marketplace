@@ -22,58 +22,58 @@ body {
 }
 
 .btn-custom 
-    {
-        background-color: #002f34;
-        border-color: #002f34;
-        color: #fff;
-    }
+{
+  background-color: #002f34;
+  border-color: #002f34;
+  color: #fff;
+}
 
 .background
-    {
-        background-color: #f2f4f5;
-        border-width: 0px;
-    }
+{
+  background-color: #f2f4f5;
+  border-width: 0px;
+}
 
-    .dropdown-custom
-    {
-        position: relative;
-        width: 100%;
-    }    
-    
-    .dropdown-custom-button
-    {
-        cursor: pointer;
-        width: 100%;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        padding-left: 60px;
-        padding-right: 70px;
-        border: 1px solid rgba(0, 0, 0, .01);
-        background-color: yellowgreen;
-        color: white;
-    }
-    
-    .dropdown-custom-menu
-    {
-      z-index: 9;
-      position: absolute;
-      left: 0;
-      top: calc(100% + .5rem);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      background-color: white;
-      border-radius: 10px;
-      padding: 10px;
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-      transform: translateY(-25%);
-      pointer-events: none;
-    }
-    
-    .dropdown-custom.active > .btn + .dropdown-custom-menu{
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
+.dropdown-custom
+{
+  position: relative;
+  width: 100%;
+}    
+
+.dropdown-custom-button
+{
+  cursor: pointer;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 60px;
+  padding-right: 70px;
+  border: 1px solid rgba(0, 0, 0, .01);
+  background-color: yellowgreen;
+  color: white;
+}
+
+.dropdown-custom-menu
+{
+  z-index: 9;
+  position: absolute;
+  left: 0;
+  top: calc(100% + .5rem);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  transform: translateY(-25%);
+  pointer-events: none;
+}
+
+.dropdown-custom.active > .btn + .dropdown-custom-menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 
 .imagePreview
 {
@@ -81,196 +81,194 @@ body {
   display: block;
 }
 
-    .background
-    {
-        background-color: #f2f4f5;
-        border-width: 0px;
-    }
+.background
+{
+  background-color: #f2f4f5;
+  border-width: 0px;
+}
 
-    .btn-custom
-    {
-        background-color:#002f34;
-    }
+.btn-custom
+{
+  background-color:#002f34;
+}
 
-    .btn-custom:hover
-    {
-      background-color: white;
-      color:#002f34
-    }
+.btn-custom:hover
+{
+  background-color: white;
+  color:#002f34
+}
 
-    .description
-    {
-        height: 200px;
-    }
+.description
+{
+  height: 200px;
+}
 
-    .field-validation-error
-    {
-        color: red;        
-    }
+.field-validation-error
+{
+  color: red;        
+}
 
-    .input-validation-error
-    {
-        color : red;
-    }
+.input-validation-error
+{
+  color : red;
+}
 
-    .pager
-    {
-      flex:auto;
-      flex-direction: row;
-      margin: 25px;
-      padding: 5px;
-      align-items: center;
-      text-align: center;
-    }
-    
-    .pageLabel
-    {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      border: 0px;
-      background-color: transparent;
-      color: #002f34;
-      font-weight: 600;
-      font-size: 15px;
-      margin: 5px;
-      cursor: pointer;
-    }
+.pager
+{
+  flex:auto;
+  flex-direction: row;
+  margin: 25px;
+  padding: 5px;
+  align-items: center;
+  text-align: center;
+}
 
-    .hidden
-    {
-      visibility: hidden;
-      pointer-events: none;
-    }
+.pageLabel
+{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 0px;
+  background-color: transparent;
+  color: #002f34;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 5px;
+  cursor: pointer;
+}
 
-    .pageButton
-    {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      border: 0px;
-      background-color: transparent;
-      color: #002f34;
-      font-weight: 600;
-      font-size: 15px;
-      margin: 5px;
-    }
+.hidden
+{
+  visibility: hidden;
+  pointer-events: none;
+}
 
-    .pageButton.active
-    {
-      border: 2px solid #002f34;
-    }
+.pageButton
+{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 0px;
+  background-color: transparent;
+  color: #002f34;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 5px;
+}
 
-    .pageButton:hover
-    {
-      border: 3px solid #002f34;
-    }
+.pageButton.active
+{
+  border: 2px solid #002f34;
+}
 
+.pageButton:hover
+{
+  border: 3px solid #002f34;
+}
 
-  
-    .btn-outline-custom
-    {
-      background-color: #002f34;
-      border: 3px solid #002f34;
-      color : white;
-      width: 100%;
-      font-size: 20px;
-      font-weight: 600;
-      height : 60px;
-    }
+.btn-outline-custom
+{
+  background-color: #002f34;
+  border: 3px solid #002f34;
+  color : white;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  height : 60px;
+}
 
-    .btn-outline-custom:hover
-    {
-      background-color: white;
-      color: #002f34;
-    }
-    
-    .searchBar
-    {
-      font-size: 20px;
-      font-weight: 200;
-      height: 60px;
-      padding: 20px;
-      width: 100%;
-      color: rgba(0, 0, 0, .5);
-      border: 0;
-      text-align: start;
-    }
+.btn-outline-custom:hover
+{
+  background-color: white;
+  color: #002f34;
+}
 
-    .searchBarButton
-    {
-      font-size: 20px;
-      font-weight: 200;
-      width: 100%;
-      padding-left: 20px;
-      text-align: start;
-      height: 60px;
-      background-color: white;
-      color: rgba(0, 0, 0, .5);
-      border: 0;
-    }
-    .popup
-    {
-      border-radius: 10px;
-      border-width: 5px;
-      border: black;
-      border-color: rgb(54, 54, 54);
-      align-items: center;
-      width: 400px;
-      background-color: white;
-      position: fixed;
-      top: 0%;
-      left: 50%;
-      text-align: center;
-      padding: 30px;
-      transform: translate(-50%, -50%) scale(0.1);
-      transition: transform ease-in-out 0.2s;
-      visibility: hidden;
-      z-index: 10;
-    }
-    
-    .popup-show
-    {
-      top: 50%;
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    
-    .popup img
-    {
-      width: 100px;
-      height: 100px;
-      margin-top: -80px;
-      box-shadow: black;
-    }
-  
-    .popup .btn
-    {
-      color: white;
-      margin-top: 30px;
-      border-radius: 25px;
-    }
-    
-    .overlay
-    {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, .5);
-        pointer-events: none;
-        z-index: 9;
-    }
-    
-    .overlay-show
-    {
-        opacity: 100;
-        pointer-events: all;
-    }
+.searchBar
+{
+  font-size: 20px;
+  font-weight: 200;
+  height: 60px;
+  padding: 20px;
+  width: 100%;
+  color: rgba(0, 0, 0, .5);
+  border: 0;
+  text-align: start;
+}
 
-    .favourite-button
+.searchBarButton
+{
+  font-size: 20px;
+  font-weight: 200;
+  width: 100%;
+  padding-left: 20px;
+  text-align: start;
+  height: 60px;
+  background-color: white;
+  color: rgba(0, 0, 0, .5);
+  border: 0;
+}
+.popup
+{
+  border-radius: 10px;
+  border-width: 5px;
+  border: black;
+  border-color: rgb(54, 54, 54);
+  align-items: center;
+  width: 400px;
+  background-color: white;
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  text-align: center;
+  padding: 30px;
+  transform: translate(-50%, -50%) scale(0.1);
+  transition: transform ease-in-out 0.2s;
+  visibility: hidden;
+  z-index: 10;
+}
+
+.popup-show
+{
+  top: 50%;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.popup img
+{
+  width: 100px;
+  height: 100px;
+  margin-top: -80px;
+  box-shadow: black;
+}
+
+.popup .btn
+{
+  color: white;
+  margin-top: 30px;
+  border-radius: 25px;
+}
+
+.overlay
+{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+    z-index: 9;
+}
+
+.overlay-show
+{
+    opacity: 100;
+    pointer-events: all;
+}
+
+.favourite-button
 {
     width: 30px;
     height: 30px;
@@ -292,122 +290,122 @@ body {
 }
 
     
-    .view-title
-    {
-        text-align: center;
-        padding-top: 50px;
-        padding-bottom: 30px;
-        margin-bottom: 50px;
-    }
+.view-title
+{
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 30px;
+  margin-bottom: 50px;
+}
 
-    .anuntCard:hover .anunt-edit
-    {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.anuntCard:hover .anunt-edit
+{
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    .anunt-edit
-    {
-        opacity: 0;
-        transform: translateY(-50%);
-        transition: all .3s linear .1s;
-        width: 50px;
-        height: 50px;
-        margin-right:20px;
-        vertical-align: bottom;
-        background-color: #002f34;
-        color:white;
-        border-radius: 50%;
-        border: 0;
-        position: absolute;
-        top:0;
-        left: 0;
-        margin-left: -20px;
-        margin-top: -20px;
-    }
+.anunt-edit
+{
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: all .3s linear .1s;
+  width: 50px;
+  height: 50px;
+  margin-right:20px;
+  vertical-align: bottom;
+  background-color: #002f34;
+  color:white;
+  border-radius: 50%;
+  border: 0;
+  position: absolute;
+  top:0;
+  left: 0;
+  margin-left: -20px;
+  margin-top: -20px;
+}
 
-    .anunt-price
-    {
-        vertical-align: top;
-        font-weight: 800;
-        font-size: 20px;
-        margin: 20px;
-        text-align: end;
-    }
-    
-    .text-align-end
-    {
-        text-align: end;
-    }
+.anunt-price
+{
+  vertical-align: top;
+  font-weight: 800;
+  font-size: 20px;
+  margin: 20px;
+  text-align: end;
+}
 
-    .anunt-title
-    {
-        display: block;
-        vertical-align: top;
-        font-size: clamp( 20px, 2vw, 30px);
-        font-weight: 400;
-        padding-top : 20px;
-    }
+.text-align-end
+{
+  text-align: end;
+}
 
-    .anunt-date
-    {
-        display: block;
-        position:absolute;
-        bottom:0;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.3);
-        vertical-align: bottom;
-        padding-bottom: 20px;
-    }
+.anunt-title
+{
+  display: block;
+  vertical-align: top;
+  font-size: clamp( 20px, 2vw, 30px);
+  font-weight: 400;
+  padding-top : 20px;
+}
 
-    .anunt-dots
-    {
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        display: block;
-        vertical-align: bottom;
-        top: 100%;
-        left: 100%;
-        cursor: pointer;
-        margin-left: -60px;
-        margin-top: -50px;
-    }
-   
+.anunt-date
+{
+  display: block;
+  position:absolute;
+  bottom:0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.3);
+  vertical-align: bottom;
+  padding-bottom: 20px;
+}
 
-    .dots-dropdown-menu
-    {
-        position: absolute;
-        z-index: 9;
-        background-color: white;
-        border: 1px solid black;
-        border-radius: 5px;
-        right: 0;
-        top: 100%;
-        opacity: 0;
-        pointer-events: none;
-        transition: all linear .3s;
-    } 
+.anunt-dots
+{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  display: block;
+  vertical-align: bottom;
+  top: 100%;
+  left: 100%;
+  cursor: pointer;
+  margin-left: -60px;
+  margin-top: -50px;
+}
 
-    .dropdown-option
-    {
-        padding: 10px;
-        display: block;
-        color:black;
-        font-size: 18px;
-        font-weight: 300;
-        z-index: 9;
-        text-align: center;
-    }
 
-    .dropdown-option:hover
-    {
-        background-color: #002f34;
-        color:white;
-    }
+.dots-dropdown-menu
+{
+  position: absolute;
+  z-index: 9;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  right: 0;
+  top: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all linear .3s;
+} 
 
-    .dots-dropdown.active > .dots-dropdown-menu
-    {
-        opacity: 1;
-        pointer-events: auto;
-    }
+.dropdown-option
+{
+  padding: 10px;
+  display: block;
+  color:black;
+  font-size: 18px;
+  font-weight: 300;
+  z-index: 9;
+  text-align: center;
+}
+
+.dropdown-option:hover
+{
+  background-color: #002f34;
+  color:white;
+}
+
+.dots-dropdown.active > .dots-dropdown-menu
+{
+  opacity: 1;
+  pointer-events: auto;
+}
