@@ -17,7 +17,7 @@ namespace Marketplace.Controllers
             _context = context;
         }
 
-        public IActionResult Index(AutoProperties? auto, int pageIndex = 1, string categorie = "", string sortMethod = "random", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
+        public IActionResult Index( int pageIndex = 1, string categorie = "", string sortMethod = "random", string county="", string city="", string q = "", int minPrice=0, int maxPrice=1000000000 )
         {
             var viewModel = new OferteViewModel();
             var anunturiFiltrate = new List<Anunt>();

@@ -1,0 +1,212 @@
+@model Marketplace.ViewModels.MessagesViewModel;
+
+<div class="container">
+    <div id="anuntContainer" >
+        
+    </div>
+    <div class="chatArea" id="chatArea" >
+
+    </div>
+    
+    <div class="txtBar">
+        <div class="row g-1">
+            <div class="col-10">
+                <input id="textBox"  type="text" class="form-control" >
+            </div>
+            <div class="col-2">
+                <button class="btn btn-custom w-100" id="sendButton" onclick="sendMessage()"> Trimite </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<style>
+    #chatArea
+    {
+        overflow-y: scroll;
+        height: 500px;
+        width: 100%;
+        padding: 1rem;
+        background-color: white;
+        margin-top: 1rem;
+    }
+
+    .txtBar
+    {
+        margin-top: .35rem;
+    }
+</style>
+
+
+
+<script>
+    function LoadAnunt()
+    {
+        var anuntId = @Html.Raw(Json.Serialize(@Model.anuntId));
+        anuntDiv = document.getElementById("anuntContainer");
+
+        var request = new XMLHttpRequest();
+        request.open("GET", "/api/anunt/" + anuntId)
+        request.send();
+        request.onload = () =>
+        {
+            if ( request.status != 200 )
+            {
+                var url ="/Error/Error404";
+                window.location.href = url;
+                return;
+            }
+
+            var Anunt = JSON.parse(request.response);
+            console.log(Anunt);
+
+            anuntDiv.innerHTML +=
+            `
+                <div class="card mx-auto mt-3"> 
+                    <div class="row" style="flex: auto; flex-direction: row;" >
+                        <img class="mx-2 my-2" src="data:image/png;base64,`+ Anunt.image +`" style="width: 100px" > 
+                        <label class="anuntTitle my-2" > ` + Anunt.title + ` </label>
+                        <label class="anuntPrice" my-2 > ` + Anunt.price + ` Lei </label>
+                    </div>
+                </div>
+            `
+        }
+    }
+
+    function sendMessage()
+    {
+        var message = document.getElementById("textBox").value;
+        var viewModel = @Html.Raw(Json.Serialize(@Model))
+
+        var request = new XMLHttpRequest();
+        var url = window.location.search
+        var urlParams = new URLSearchParams(url);
+        var chatRoomId = urlParams.get("chatRoomId")
+        console.log( chatRoomId )
+        request.open("POST", "/api/chat/sendMessage/" + chatRoomId + "?message=" + message)
+        request.send();
+        request.onload = () =>
+        {
+            console.log(request.response)
+        }
+
+        document.getElementById("textBox").value = "";
+
+        var chatArea = document.getElementById("chatArea");
+        chatArea.innerHTML += 
+        `
+            <div class="alignEnd" >
+                <label class="message-send" > ` + message + ` </label>
+            </div>
+        `
+        
+        ScrollDown();
+    }
+
+    function ScrollDown() // not working
+    {
+        var objDiv = document.getElementById("textBox");
+        objDiv.scrollTop = objDiv.scrollHeight - objDiv.getBoundingClientRect().height;
+        console.log("Scrolled Down")
+    }
+
+    document.getElementById("textBox").addEventListener("keydown", e =>
+    {
+        if ( e.keyCode == 13 )
+        {
+            sendMessage();
+        }
+    })
+
+    window.addEventListener("load", () =>
+    {
+        LoadAnunt();
+        
+        var model = @Html.Raw(Json.Serialize(@Model.Chatmessages));
+        var senderState = @Html.Raw(Json.Serialize(@Model.SenderState));
+        
+        model.forEach( message =>
+        {
+            var div = document.getElementById("chatArea");
+            console.log(senderState)
+            if ( message.sender == senderState )
+            {
+                div.innerHTML += 
+                `
+                    <div class="alignEnd" >
+                        <label class="message-send" > ` + message.message + ` </label>
+                    </div>
+                `
+            }
+            else
+            {
+                div.innerHTML += 
+                `
+                    <div class="message-received" >
+                        <label > ` + message.message + ` </label>
+                    </div>
+                `
+            }
+            
+            
+        })  
+
+        ScrollDown();
+    })
+</script>
+
+<style>
+    .message-received
+    {
+        text-align: start;
+        padding: .5rem 25px;
+        font-size: 1rem;
+        width: fit-content;
+        background-color: #f2f4f5;
+        border-radius: .5rem;
+        margin: .25rem 0;
+        max-width: 75%;
+        color: black;
+    }
+
+    .message-send
+    {
+        text-align: start;
+        padding: .5rem 25px;
+        font-size: 1rem;
+        width: fit-content;
+        background-color: #002f34;
+        border-radius: .5rem;
+        margin: .25rem 0;
+        max-width: 75%;
+        color: white;
+    }
+
+    .alignEnd
+    {
+        text-align: end;
+        align-items: end;
+        width: 100%;
+    }
+
+    .anuntTitle
+    {
+        position: absolute;
+        top: 0;
+        left: 100px;
+    }
+
+    .anuntPrice
+    {
+        position: absolute;
+        bottom: 0;
+        left: 100px;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    
+</style>
+

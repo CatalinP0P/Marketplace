@@ -28,9 +28,14 @@
 
         <div class="card bg-white mt-2 border-0 border-round" >
             <div class="mx-4 my-4">
-                <div class="col">
-                    <h4> Contact </h4>
-                    <button class="btn btn-custom btn-large" id="contactButton" onClick="showContact()" > Contacteaza Vanzator </button>
+                <h4> Contact </h4>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-custom btn-large w-100" id="contactButton" onClick="showContact()" > Telefon </button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-custom btn-large w-100" id="messageButton" data-anunt-id="@Model.Id" onclick="sendMessage(this)" > Trimite mesaj </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,6 +134,35 @@
     {
         popup.classList.remove("popup-show");
         closeOverlay();
+    }
+
+    function sendMessage(e)
+    {
+        var button = e;
+        var anuntId = e.getAttribute("data-anunt-id")
+        console.log(anuntId);
+
+        var chatRoomExists = false;
+        var request = new XMLHttpRequest();
+        request.open("GET", "/api/chat/exists/" + anuntId);
+        request.send();
+        request.onload = () =>
+        {
+            chatRoomExists = request.response;
+        }
+
+        console.log(chatRoomExists)
+        if ( !chatRoomExists )
+        {
+            request.open("POST", "/api/chat/createChat/" + anuntId)
+            request.send();
+            request.onload = () =>
+            {
+                console.log(request.response)
+                var url = "/chat/messages?chatRoomId=" + request.response;
+                window.location.href = url;
+            }
+        }
     }
 
 

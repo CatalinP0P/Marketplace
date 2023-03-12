@@ -3,6 +3,7 @@ using System;
 using Marketplace.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketplace.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230307151831_Initial Chat Migration")]
+    partial class InitialChatMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -154,10 +157,6 @@ namespace Marketplace.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BuyerId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -1,0 +1,136 @@
+@model List<Chatroom>;
+
+<div class="container-fluid" style="background-color: white;">
+    <div class="header">
+        <h1 class="pt-4 pb-5"> Vanzare </h1>
+        <a asp-action="Buying" asp-controller="Chat" style="text-decoration: none" >
+            <label class="option" > Cumparare </label>
+        </a>
+        <label class="option selected"> Vanzare </label>
+    </div>
+</div>
+
+<div class="container" id="chatContainer">
+
+</div>
+
+<style>
+    .header
+    {
+        width: 100%;
+        text-align: center;
+        align-items: center;
+        background-color: white;
+    }
+
+    .option.selected
+    {
+        border-bottom: 2px solid black;
+        text-decoration: none;
+    }
+
+    .option
+    {
+        color: black;
+        font-size: 1.5rem;
+        padding: .35rem .75rem;
+        background-color: transparent;  
+        cursor: pointer;
+        width: fit-content;
+    }
+</style>
+
+<script>
+    window.addEventListener("load", () => 
+    {
+        var Model = @Html.Raw(Json.Serialize(@Model));
+
+        Model.forEach( chatroom => 
+        {
+            // Getting the anunt from api
+            var request = new XMLHttpRequest()
+            request.open("GET", "/api/anunt/" + chatroom.anuntId);
+            request.send();
+            request.onload = () => 
+            {
+                var anunt = JSON.parse(request.response)
+                var request2 = new XMLHttpRequest();
+                request2.open("GET", "/api/chat/GetLast/" + chatroom.id )
+                request2.send();
+                request2.onload = () =>
+                {
+                    var Model = JSON.parse(request2.response)
+                    var anunt = JSON.parse(request.response)
+                    var div = document.getElementById("chatContainer").innerHTML += `
+                        <a style="color:black" >
+                            <div class="col-sm-12 col-md-6 mx-auto " >
+                                <div class="chatCard" onclick="openChatRoom(this)" style="cursor: pointer" data-chatroomid=" `+ chatroom.id + ` " >
+                                    <a data-anunt-id="`+ chatroom.anuntId +`" >
+                                        <img id="anunt-`+anunt.id+`" src="" class="image-round" > 
+                                    </a>
+                                    <label class="label-top"> ` + anunt.title + ` </label>
+                                    <label class="label-footer"> ` + Model.message + ` </label>
+                                </div>
+                            </div>
+                        </a>
+                    `
+
+                    var img = document.getElementById("anunt-" + anunt.id);
+                    img.src = "data:image/png;base64," + anunt.image
+                }      
+            }
+        })
+    })
+
+    function openChatRoom(e)
+    {
+        var card = e;
+        var chatRoomId = e.getAttribute("data-chatroomid")  
+        var url = "/chat/messages?chatRoomId=" + chatRoomId;
+        window.location.href = url;
+    }
+
+</script>
+
+<style>
+    .image-round
+    {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+
+    .chatCard
+    {
+        padding: 1rem;
+        background-color: white;
+        border-radius: .5rem;
+        width: 100%;
+        position: relative;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+    }
+
+    .chatCard > *
+    {
+        pointer-events: none;
+    }
+
+    .chatCard .label-top
+    {
+        position: absolute;
+        padding: 1.25rem;
+        top: 0;
+    }
+
+    .chatCard .label-footer
+    {
+        position: absolute;
+        bottom: 0;
+        padding: 1.25rem;
+        padding-bottom: 2rem;
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+</style>
